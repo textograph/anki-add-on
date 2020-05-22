@@ -1,0 +1,37 @@
+.filler-red {
+    background-color: lightpink;
+}
+
+.filler-bg {
+    background: #d4dce6;
+    color: black;
+    margin: 5px;
+    border-radius: 2px;
+}
+
+#header {
+    max-height: 60px;
+}
+
+#chart {
+    /* height: 0vmax; */
+}
+
+.clm-wide1 {
+    /* height: 600px; */
+    max-width: 65%;
+    padding: 5px;
+}
+
+.red_text {
+    fill: red;
+}
+
+.black_text {
+    fill: black;
+}
+
+#text_area {
+    /* max-height: 600px; */
+    flex: 1 0 auto
+}

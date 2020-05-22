@@ -1,0 +1,47 @@
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="css/undernet.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/slider.css" />
+    <!-- add other styles/css here -->
+</head>
+
+
+<body>
+
+
+    <div class="grid is-fullscreen">
+        <div class="content">
+            <div class="dataTable">
+
+            </div>
+            <div class="properties">
+                <div class="slider"></div>
+                <div class="size"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- add page content here -->
+    <!-- <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script> -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/undernet@8.1.0/dist/undernet.bundle.min.js" integrity="sha256-am6vAHMcM/VM5t7fA2/WTBPL4UbehfbYc4M7aLFe824=" crossorigin="anonymous"></script> -->
+    <script type="text/javascript" src="js/undernet.bundle.min.js"></script>
+    <script type="text/javascript">
+        // Undernet is now  attached to the `window`
+        if (document)
+            document.addEventListener("DOMContentLoaded", function() {
+                Undernet.start()
+            })
+    </script>
+    <script src="js/slider.js"></script>
+    <script type="text/javascript" src="js/chart.js"></script>
+</body>
+
+</html>
