@@ -119,6 +119,10 @@ function test_graph() {
     graph_data.addChild("row2_0")
     for (let i = 1; i < 5; i++) graph_data.addSibling(`row2_${i}`);
 
+    graph_data.addUncle("row1_6")
+    graph_data.addChild("nrow2_0")
+    for (let i = 1; i < 5; i++) graph_data.addSibling(`nrow2_${i}`);
+
     // print data in console
     console.log([...graph_data.nodes.values()])
     console.log(graph_data.stratify())
