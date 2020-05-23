@@ -31,7 +31,50 @@
     fill: black;
 }
 
+#text-column {
+    width: 100%;
+}
+
 #text_area {
     /* max-height: 600px; */
-    flex: 1 0 auto
+    flex: 1 0 auto;
+    height: 96%;
+    width: 96%;
+    margin: 2%;
+}
+
+#text-view {
+    width: 100%;
+    height: calc(100% - 40px);
+    overflow-y: scroll;
+    color: black;
+    font-size: 10pt;
+    padding: 10px;
+}
+
+#mini-toolbar {
+    opacity: 90%;
+    top: 0;
+    position: absolute;
+    background: blue;
+    height: 30px;
+    display: none;
+    width: auto;
+    justify-content: space-around;
+}
+
+#mini-toolbar div {
+    opacity: 100% !important;
+    background: rgb(173, 139, 88);
+    width: auto;
+    height: 20px;
+    margin: 3px;
+    border-radius: 2px;
+    display: block;
+    font-size: x-small;
+    cursor: pointer;
+}
+
+#collapsible-id.is-visible {
+    height: 93% !important;
 }
