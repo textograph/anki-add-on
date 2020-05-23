@@ -61,7 +61,7 @@ var tree = d3.tree()
     .size([2 * Math.PI, radius])
     .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth)
 
-function chart() {
+function chart(data, width) {
     const root = tree(data);
     var svg = d3.select('#chart').append("svg");
 
@@ -104,8 +104,8 @@ function chart() {
         .attr("dy", "0.31em")
         .attr("x", d => d.x < Math.PI === !d.children ? 6 : -6)
         .attr("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
-        .attr("id", d => d.data.id)
-        .text(d => d.data.name)
+        .text(d =>
+            d.data.data.name)
         .clone(true).lower()
         .attr("stroke", "white");
 
@@ -115,16 +115,17 @@ function chart() {
             }
             txt = d3.select(this)
             txt.attr('class', "red_text")
-            the_id = d.data.id
+            the_id = d.data.data.id
             test = `#${the_id}`
             window.curr_selection = txt
-            console.log("hello" + d.data.name);
-
+            console.log("hello " + d.data.data.name);
         })
         // .onclick("click();");
         // d3.select("body").style("background-color", "black");
-    const viewbox = `-${width} -${width} ${width*2} ${width*2}`
+    _width2 = width * 2 + 90
+    _width1 = (width + 40)
+    const viewbox = `-${_width1} -${_width1} ${_width2} ${_width2}`
     svg.attr("viewBox", viewbox)
 }
-chart();
+// chart(data);
 curr_selection = $('#id_1')
