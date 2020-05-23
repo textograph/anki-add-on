@@ -61,10 +61,10 @@ var tree = d3.tree()
     .size([2 * Math.PI, radius])
     .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth)
 
-function chart(data, width) {
-    const root = tree(data);
+function chart(root, width) {
+    tree(root);
+    d3.select('#chart').select("svg").remove();
     var svg = d3.select('#chart').append("svg");
-
     svg.append("g")
         .attr("fill", "none")
         .attr("stroke", "#555")
@@ -127,5 +127,4 @@ function chart(data, width) {
     const viewbox = `-${_width1} -${_width1} ${_width2} ${_width2}`
     svg.attr("viewBox", viewbox)
 }
-// chart(data);
 curr_selection = $('#id_1')
