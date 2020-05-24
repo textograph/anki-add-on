@@ -105,7 +105,7 @@ function chart(root, width) {
         .attr("x", d => d.x < Math.PI === !d.children ? 6 : -6)
         .attr("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
         .text(d =>
-            d.data.data.name)
+            d.data.name)
         .clone(true).lower()
         .attr("stroke", "white");
 
@@ -115,10 +115,10 @@ function chart(root, width) {
             }
             txt = d3.select(this)
             txt.attr('class', "red_text")
-            the_id = d.data.data.id
+            the_id = d.data.id
             test = `#${the_id}`
             window.curr_selection = txt
-            console.log("hello " + d.data.data.name);
+            console.log("hello " + d.data.name);
         })
         // .onclick("click();");
         // d3.select("body").style("background-color", "black");

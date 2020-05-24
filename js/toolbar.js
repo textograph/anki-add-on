@@ -55,8 +55,22 @@ $("#mini-toolbar").on('click', 'div', function() {
             default:
                 break;
         }
-        graph_data.addGraph()
-        wrap_svg_texts()
+
+        function refresh_graph(data) {
+
+            var radius = 150
+            var width = (data.height * radius)
+            chart(data, width)
+
+        }
+
+        const json = graph_data.stratify();
+        var data = d3.hierarchy(json);
+        refresh_graph(data);
+        wrap_svg_texts();
+        //save current json it to the document
+
+        $("#save_area").text(JSON.stringify(json))
             // alert("You clicked on li " + $(this).text());
     }
 
@@ -77,7 +91,5 @@ $("#toolbar").on('click', 'div', function() {
     // alert("You clicked on li " + $("#save_area").val());
     var json = JSON.stringify([...graph_data.nodes.values()]);
     $("#save_area").text(json)
-
-
 
 });

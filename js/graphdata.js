@@ -90,25 +90,13 @@ var graph_data = {
 
         },
         stratify() {
-            heirarchy_func = d3.stratify()
-                .id(function(d) { return d.id; })
-                .parentId(function(d) { return (d.parent == null) ? null : d.parent.id; });
-            my_arr = [...this.nodes.values()]
-            res = heirarchy_func(my_arr);
-            return res;
-        },
-        addGraph() {
-            var data = d3.hierarchy(this.stratify())
-            var radius = 150
-            var width = (data.height * radius)
-            chart(data, width)
-        },
-
-        getJson() {
             nodes = [...this.nodes.values()]
             parent = this.nodes.get(0)
-            json = get_childrenof(null, nodes) //parent is null so it returns all hierarchy including root
-            return JSON.stringify(json);
+            return get_childrenof(null, nodes)[0] //parent is null so it returns all hierarchy including root
+        },
+
+        getJsonStr() {
+            return JSON.stringify(this.stratify);
         }
 
     }
