@@ -68,3 +68,16 @@ $("#mini-toolbar").on('mousedown', 'div', function() {
     }
 
 });
+
+
+$("#toolbar").on('click', 'div', function() {
+
+    console.log($("#save_area").text())
+
+    // alert("You clicked on li " + $("#save_area").val());
+    var json = JSON.stringify([...graph_data.nodes.values()]);
+    $("#save_area").text(json)
+
+
+
+});

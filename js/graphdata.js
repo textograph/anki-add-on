@@ -102,6 +102,13 @@ var graph_data = {
             var radius = 150
             var width = (data.height * radius)
             chart(data, width)
+        },
+
+        getJson() {
+            nodes = [...this.nodes.values()]
+            parent = this.nodes.get(0)
+            json = get_childrenof(null, nodes) //parent is null so it returns all hierarchy including root
+            return JSON.stringify(json);
         }
 
     }
@@ -128,3 +135,19 @@ var graph_data = {
 //     console.log(graph_data.stratify())
 //     graph_data.addGraph()
 // }
+
+function get_childrenof(parent, nodes) {
+    let tmp_arr = []
+    nodes.forEach((node, index, nodes) => {
+        if (node.parent == parent) {
+            delete nodes[index]
+            new_node = {
+                id: node.id,
+                name: node.name,
+                children: get_childrenof(node, nodes)
+            };
+            tmp_arr.push(new_node);
+        };
+    });
+    return tmp_arr;
+}

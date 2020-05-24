@@ -52,7 +52,8 @@
     padding: 10px;
 }
 
-#mini-toolbar {
+#mini-toolbar,
+#toolbar {
     opacity: 90%;
     top: 0;
     position: absolute;
@@ -63,7 +64,8 @@
     justify-content: space-around;
 }
 
-#mini-toolbar div {
+#mini-toolbar div,
+#toolbar div {
     opacity: 100% !important;
     background: rgb(173, 139, 88);
     width: auto;
@@ -73,6 +75,15 @@
     display: block;
     font-size: x-small;
     cursor: pointer;
+}
+
+#save_area {
+    display: none;
+}
+
+#toolbar {
+    display: flex;
+    position: relative;
 }
 
 #collapsible-id.is-visible {
