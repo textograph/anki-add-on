@@ -56,6 +56,7 @@ $("#mini-toolbar").on('click', 'div', function() {
                 break;
         }
         graph_data.addGraph()
+        wrap_svg_texts()
             // alert("You clicked on li " + $(this).text());
     }
 
