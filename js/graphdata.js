@@ -83,20 +83,33 @@ var graph_data = {
             }
 
         },
-        getNodes() {
-
-        },
-        getParentN() {
-
-        },
+        getNodes() {},
+        getParentN() {},
         stratify() {
             nodes = [...this.nodes.values()]
-            parent = this.nodes.get(0)
+                // parent = this.nodes.get(0)
             return get_childrenof(null, nodes)[0] //parent is null so it returns all hierarchy including root
         },
+        setData(json) {
+            tmp_arr = destratify(json, null)
+            delete this.current_node
+            this.eraseData()
+            tmp_arr.forEach(node => {
+                this.nodes.set(node.id, node)
+            });
+            this.root_node = this.nodes.get(0)
+            this.changeCurrentNode(0)
+            this.auto_inc_id = Math.max([...this.nodes.keys()]) + 1
 
+        },
         getJsonStr() {
             return JSON.stringify(this.stratify);
+        },
+        eraseData() {
+            this.nodes.clear()
+        },
+        changeCurrentNode(id) {
+            this.current_node = this.nodes.get(id)
         }
 
     }
@@ -138,4 +151,18 @@ function get_childrenof(parent, nodes) {
         };
     });
     return tmp_arr;
+}
+
+function destratify(node, parent = null) {
+    let child_arr = []
+    let cur_obj = {
+        id: node.id,
+        name: node.name,
+        parent: parent
+    }
+    node.children.forEach(child => {
+        child_arr = child_arr.concat(destratify(child, cur_obj))
+    });
+    child_arr.push(cur_obj)
+    return child_arr;
 }

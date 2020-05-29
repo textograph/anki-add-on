@@ -61,8 +61,8 @@ var tree = d3.tree()
     .size([2 * Math.PI, radius])
     .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth)
 
-function chart(root, width) {
-    tree(root);
+function chart(hierarchy_data, width) {
+    const root = tree(hierarchy_data);
     d3.select('#chart').select("svg").remove();
     var svg = d3.select('#chart').append("svg");
     svg.append("g")
