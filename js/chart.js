@@ -1,73 +1,39 @@
 function autoBox() {
-
-    $("#chart").appendChild(this);
+    // document.body.appendChild(this);
+    // $("#chart").appendChild(this);
+    var groupElement = document.querySelector('#svg_canvas');
     const {
         x,
         y,
         width,
         height
-    } = this.getBBox();
+    } = groupElement.getBBox();
     //document.body.removeChild(this);
     return [x, y, width, height];
 }
-mydata = ({
-    id: 'id_1',
-    name: 'ali',
-    children: [{
-        id: 'id_2',
-        name: 'ahmad',
-        children: [{
-            id: 'id_3',
-            name: 'salam',
-            children: {}
-        }, {
-            id: 'id_4',
-            name: 'salam',
-            children: {}
-        }, ]
-    }, {
-        id: 'id_5',
-        name: 'mahmood',
-        children: [{
-            id: 'id_6',
-            name: 'salam',
-            children: {}
-        }, {
-            id: 'id_7',
-            name: 'salam',
-            children: {}
-        }, ]
-    }, {
-        id: 'id_8',
-        name: 'hoda',
-        children: [{
-            id: 'id_9',
-            name: 'salam',
-            children: {}
-        }, {
-            id: 'id_10',
-            name: 'goodbye',
-            children: {}
-        }, ]
-    }, ]
-})
 
-var data = d3.hierarchy(mydata)
+// var data = d3.hierarchy(data)
 var radius = 150
-var width = (data.height * radius)
+    // var width = (data.height * radius)
 window.curr_selection
-
+    // width = document.body.clientWidth
+    // var width = (data.height * radius)
 var tree = d3.tree()
     .size([2 * Math.PI, radius])
     .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth)
 
 function chart(root, width) {
+
+
+
     tree(root);
+
     d3.select('#chart').select("svg").remove();
     var svg = d3.select('#chart').append("svg");
     svg.append("g")
         .attr("fill", "none")
         .attr("stroke", "#555")
+        .attr("id", "svg_canvas")
         .attr("stroke-opacity", 0.4)
         .attr("stroke-width", 1.5)
         .selectAll("path")
@@ -116,16 +82,20 @@ function chart(root, width) {
             txt = d3.select(this)
             txt.attr('class', "red_text")
             the_id = d.data.id
+            graph_data.changeCurrentNode(the_id)
             test = `#${the_id}`
             window.curr_selection = txt
             console.log("hello " + d.data.name);
         })
         // .onclick("click();");
         // d3.select("body").style("background-color", "black");
+
+
     _width2 = width * 2 + 90
     _width1 = (width + 40)
     const viewbox = `-${_width1} -${_width1} ${_width2} ${_width2}`
     svg.attr("viewBox", viewbox)
+        // svg.attr("viewBox", autoBox())
 }
 curr_selection = $('#id_1')
 
@@ -139,10 +109,10 @@ function wrap_svg_texts() {
 
 function wrap_svg_text(element) {
 
-    var x = 0;
-    var y = 12;
-    var width = 15;
-    var lineHeight = 10;
+    let x = 0;
+    let y = 12;
+    let width = 15;
+    let lineHeight = 10;
 
 
 
@@ -177,3 +147,4 @@ function wrap_svg_text(element) {
     document.getElementById("PROCESSING").remove();
 
 }
+drawer = chart
