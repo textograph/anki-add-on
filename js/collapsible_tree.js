@@ -2,11 +2,13 @@ margin = ({ top: 10, right: 120, bottom: 10, left: 40 })
     // width = 
 dy = document.body.clientWidth / 6
 dx = 10
-tree = d3.tree().nodeSize([dx, dy])
+
 
 diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x)
 
 function chart_tree(root, width) {
+    var tree = d3.tree().nodeSize([dx, dy])
+
     root.x0 = dy / 2;
     root.y0 = 0;
     root.descendants().forEach((d, i) => {

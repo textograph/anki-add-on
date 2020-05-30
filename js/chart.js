@@ -18,15 +18,14 @@ var radius = 150
 window.curr_selection
     // width = document.body.clientWidth
     // var width = (data.height * radius)
-var tree = d3.tree()
-    .size([2 * Math.PI, radius])
-    .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth)
-
-function chart(root, width) {
 
 
+function chart(hierarchy_data, width) {
+    var tree = d3.tree()
+        .size([2 * Math.PI, radius])
+        .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth)
 
-    tree(root);
+    const root = tree(hierarchy_data);
 
     d3.select('#chart').select("svg").remove();
     var svg = d3.select('#chart').append("svg");

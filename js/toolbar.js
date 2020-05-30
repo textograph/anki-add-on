@@ -81,6 +81,7 @@ $("#toolbar").on('click', 'div', function() {
     the_id = $(this).attr("id")
     switch (the_id) {
         case "web":
+            var radius = 100;
             drawer = chart;
             json = graph_data.stratify();
             var data = d3.hierarchy(json);
@@ -88,6 +89,7 @@ $("#toolbar").on('click', 'div', function() {
             break;
         case "tree":
             drawer = chart_tree;
+            var tree = d3.tree().nodeSize([dx, dy])
             json = graph_data.stratify();
             var data = d3.hierarchy(json);
             drawer(data, document.body.clientWidth);
