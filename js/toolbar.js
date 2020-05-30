@@ -20,10 +20,7 @@ function gText(e) {
         toolbar.css("display", 'none');
     }
 }
-// document.onmousedown = function() {
-//     toolbar = $("#mini-toolbar");
-//     toolbar.css("display", 'none');
-// }
+
 document.onmouseup = gText;
 if (!document.all) document.captureEvents(Event.MOUSEUP);
 
@@ -56,21 +53,15 @@ $("#mini-toolbar").on('click', 'div', function() {
                 break;
         }
 
-        function refresh_graph(data) {
 
-            var radius = 150
-            var width = (data.height * radius)
-            chart(data, width)
-
-        }
 
         const json = graph_data.stratify();
         var data = d3.hierarchy(json);
-        refresh_graph(data);
+        drawer(data, (data.height + 1) * radius);
         wrap_svg_texts();
-        //save current json it to the document
-
-        $("#save_area").text(JSON.stringify(json))
+        //save current json into the document
+        json_str = JSON.stringify(json)
+        $("#save_area").text(json_str)
             // alert("You clicked on li " + $(this).text());
     }
 
@@ -86,10 +77,27 @@ $("#mini-toolbar").on('mousedown', 'div', function() {
 
 $("#toolbar").on('click', 'div', function() {
 
-    console.log($("#save_area").text())
-
+    // console.log($("#save_area").text())
+    the_id = $(this).attr("id")
+    switch (the_id) {
+        case "web":
+            var radius = 100;
+            drawer = chart;
+            json = graph_data.stratify();
+            var data = d3.hierarchy(json);
+            drawer(data, (data.height + 1) * radius);
+            break;
+        case "tree":
+            drawer = chart_tree;
+            json = graph_data.stratify();
+            var data = d3.hierarchy(json);
+            drawer(data, document.body.clientWidth);
+            break;
+        default:
+            break;
+    }
     // alert("You clicked on li " + $("#save_area").val());
-    var json = JSON.stringify([...graph_data.nodes.values()]);
-    $("#save_area").text(json)
+    // var json = JSON.stringify([...graph_data.nodes.values()]);
+    // $("#save_area").text("data = " + json + ";graph_data.setData(data)")
 
 });
