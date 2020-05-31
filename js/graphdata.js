@@ -106,10 +106,13 @@ var graph_data = {
         return JSON.stringify(this.stratify);
     },
     eraseData() {
-        this.nodes.clear()
+        this.nodes.clear();
     },
     changeCurrentNode(id) {
-        this.current_node = this.nodes.get(id)
+        this.current_node = this.nodes.get(id);
+    },
+    getActiveNode() {
+        return this.current_node;
     }
 
 }

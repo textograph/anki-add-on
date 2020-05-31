@@ -14,9 +14,13 @@
 }
 
 #chart {
+    cursor: grabbing;
     /* height: 0vmax; */
 }
 
+text{
+    cursor: pointer;
+}
 .clm-wide1 {
     /* height: 600px; */
     max-width: 65%;
