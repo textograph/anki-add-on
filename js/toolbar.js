@@ -57,7 +57,7 @@ $("#mini-toolbar").on('click', 'div', function() {
 
         const json = graph_data.stratify();
         var data = d3.hierarchy(json);
-        drawer(data, (data.height + 1) * radius);
+        drawer(data, zoom);
         wrap_svg_texts();
         //save current json into the document
         json_str = JSON.stringify(json)
@@ -81,11 +81,10 @@ $("#toolbar").on('click', 'div', function() {
     the_id = $(this).attr("id")
     switch (the_id) {
         case "web":
-            var radius = 100;
             drawer = chart;
             json = graph_data.stratify();
             var data = d3.hierarchy(json);
-            drawer(data, (data.height + 1) * radius);
+            drawer(data, zoom);
             break;
         case "tree":
             drawer = chart_tree;
@@ -101,3 +100,26 @@ $("#toolbar").on('click', 'div', function() {
     // $("#save_area").text("data = " + json + ";graph_data.setData(data)")
 
 });
+
+var viewBoxSlider = document.getElementById("sliderViewBox");
+var radiusSlider = document.getElementById("sliderRadius");
+
+//var output = document.getElementById("demo");
+//output.innerHTML = slider.value;
+var zoom = 1
+var radius = 150
+radiusSlider.oninput = function() {
+    radius = this.value * 5
+    json = graph_data.stratify();
+    var data = d3.hierarchy(json);
+    drawer(data, zoom);
+
+}
+
+viewBoxSlider.oninput = function() {
+    zoom = this.value / 10
+    json = graph_data.stratify();
+    var data = d3.hierarchy(json);
+    drawer(data, zoom);
+    console.log(this.value);
+}

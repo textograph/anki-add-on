@@ -1,4 +1,4 @@
-function autoBox() {
+function autoBox(zoom) {
     // document.body.appendChild(this);
     // $("#chart").appendChild(this);
     var groupElement = document.querySelector('#svg_canvas');
@@ -9,18 +9,18 @@ function autoBox() {
         height
     } = groupElement.getBBox();
     //document.body.removeChild(this);
-    return [x, y, width, height];
+    return [x - 100, y - 100, width * zoom, height * zoom];
 }
 
 // var data = d3.hierarchy(data)
-var radius = 150
-    // var width = (data.height * radius)
+// var radius = 150
+// var width = (data.height * radius)
 window.curr_selection
     // width = document.body.clientWidth
     // var width = (data.height * radius)
 
 
-function chart(hierarchy_data, width) {
+function chart(hierarchy_data, zoom) {
     var tree = d3.tree()
         .size([2 * Math.PI, radius])
         .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth)
@@ -88,11 +88,11 @@ function chart(hierarchy_data, width) {
         // d3.select("body").style("background-color", "black");
 
 
-    _width2 = width * 2 + 90
-    _width1 = (width + 40)
-    const viewbox = `-${_width1} -${_width1} ${_width2} ${_width2}`
-    svg.attr("viewBox", viewbox)
-        // svg.attr("viewBox", autoBox())
+    // _width2 = width * 2 + 90
+    // _width1 = (width + 40)
+    // const viewbox = `-${_width1} -${_width1} ${_width2} ${_width2}`
+    // svg.attr("viewBox", viewbox)
+    svg.attr("viewBox", autoBox(zoom))
 }
 curr_selection = $('#id_1')
 

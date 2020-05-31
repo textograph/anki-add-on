@@ -55,11 +55,12 @@
 
 <body>
 
-
     <div class="grid is-fullscreen">
         <!-- header goes here -->
-        <div id="header" class="row has-align-content-flex-start">
+        <div id="header" class="row has-justify-content-space-between">
             <h1>TextoGraph</h1>
+            <input type="range" min="1" max="100" value="25" class="range-slider" id="sliderViewBox">
+            <input type="range" min="1" max="100" value="50" class="range-slider" id="sliderRadius">
             <div id="toolbar" class="has-gray900-bg-color">
                 <div id="web">Web</div>
                 <div id="tree">Tree</div>
@@ -373,7 +374,7 @@
                 "children": []
             }]
         };
-        graph_data.setData(json_data)
+        graph_data.setData(json_data);
     </script>
     <script type="text/javascript" data-savepage-src="js/chart.js" src="js/chart.js"></script>
     <script src="js/collapsible_tree.js"></script>
