@@ -36,14 +36,14 @@ var radial_tree = {
             .size([2 * Math.PI, this.radius * 10])
             .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth)
         const root = tree(hierarchy_data);
-        d3.select('#chart').select("svg").remove();
-        var svg = d3.select('#chart')
-            .append("svg")
+        var svg = d3.select('#chart').select("svg")
             .attr("id", "svg_canvas")
             .call(d3.zoom().on("zoom", function() {
-                svg.attr("transform", d3.event.transform)
+                svg.select("g").attr("transform", d3.event.transform)
             }));
-        svg.append("g")
+        var g = svg.select("g")
+        g.selectAll("g").remove()
+        g.append("g")
             .attr("fill", "none")
             .attr("stroke", "#555")
             .attr("stroke-opacity", 0.4)
@@ -55,7 +55,7 @@ var radial_tree = {
                 .angle(d => d.x)
                 .radius(d => d.y));
 
-        svg.append("g")
+        g.append("g")
             .selectAll("circle")
             .data(root.descendants())
             .join("circle")
@@ -66,7 +66,7 @@ var radial_tree = {
             .attr("fill", d => d.children ? "#555" : "#999")
             .attr("r", 3.5);
 
-        svg.append("g")
+        g.append("g")
             .attr("font-family", "sans-serif")
             .attr("font-size", 10)
             .attr("stroke-linejoin", "round")
@@ -87,7 +87,7 @@ var radial_tree = {
             .clone(true).lower()
             .attr("stroke", "white");
 
-        svg.selectAll("text").on("click", function(d) {
+        g.selectAll("text").on("click", function(d) {
                 if (window.curr_selection != undefined) {
                     window.curr_selection.attr('class', 'black_text')
                 }
@@ -107,7 +107,7 @@ var radial_tree = {
         // _width1 = (width + 40)
         // const viewbox = `-${_width1} -${_width1} ${_width2} ${_width2}`
         // svg.attr("viewBox", viewbox)
-        svg.attr("viewBox", autoBox(this.zoom / 10))
+        g.attr("viewBox", autoBox(this.zoom / 10))
     }
 }
 curr_selection = $('#id_1')

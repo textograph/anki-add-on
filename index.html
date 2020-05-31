@@ -62,7 +62,11 @@
                     </div>
                 </div>
                 <div class="dataTable column">
-                    <div id="chart"></div>
+                    <div id="chart">
+                        <svg>
+                            <g></g>
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>
@@ -98,6 +102,12 @@
         graph_data.setData(json_data);
     </script>
     <script src="js/collapsible_tree.js"></script>
+    <script>
+        drawer = radial_tree;
+        json = graph_data.stratify();
+        var data = d3.hierarchy(json);
+        drawer.draw(data);
+    </script>
     <script src="js/graphdata.js"></script>
 
 </body>

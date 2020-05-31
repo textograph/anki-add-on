@@ -33,24 +33,24 @@ var chart_tree = {
             d._children = d.children;
             if (d.depth && d.data.name.length !== 7) d.children = null;
         });
-        d3.select('#chart').select("svg").remove();
         var svg = d3.select('#chart')
-            .append("svg")
+            .select("svg")
             .attr("viewBox", this.autoBox())
             .style("font", "10px sans-serif")
             .style("user-select", "none")
             .attr("id", "svg_canvas")
             .call(d3.zoom().on("zoom", function() {
-                svg.attr("transform", d3.event.transform)
+                svg.select("g").attr("transform", d3.event.transform)
             }));
-
-        const gLink = svg.append("g")
+        var g = svg.select("g")
+        g.selectAll("g").remove()
+        const gLink = g.append("g")
             .attr("fill", "none")
             .attr("stroke", "#555")
             .attr("stroke-opacity", 0.4)
             .attr("stroke-width", 1.5);
 
-        const gNode = svg.append("g")
+        const gNode = g.append("g")
             .attr("cursor", "pointer")
             .attr("pointer-events", "all");
 
@@ -148,6 +148,5 @@ var chart_tree = {
         }
         this.update(root);
         this.data = root; //save data for later use and refresh
-        return svg.node();
     }
 }
