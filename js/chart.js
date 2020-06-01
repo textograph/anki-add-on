@@ -22,10 +22,13 @@ var radial_tree = {
     curr_selection: null,
     zoom: 10,
     radius: 100,
+    transform_attr: d3.zoomIdentity,
     refresh() {
         this.draw(this.data)
     },
     changeZoom(zoom) {
+        // changes the zooming seperately from the d3.js zooming behaviour and is specific to this view
+        // and not shared between views
         this.zoom = zoom
         svg = d3.select('#svg_canvas');
         svg.attr("viewBox", autoBox(this.zoom / 10))
@@ -39,9 +42,10 @@ var radial_tree = {
         var svg = d3.select('#chart').select("svg")
             .attr("id", "svg_canvas")
             .call(d3.zoom().on("zoom", function() {
-                svg.select("g").attr("transform", d3.event.transform)
+                radial_tree.transform_attr = d3.zoomTransform(this);
+                svg.select("g").attr("transform", radial_tree.transform_attr)
             }));
-        var g = svg.select("g")
+        var g = svg.select("g");
         g.selectAll("g").remove()
         g.append("g")
             .attr("fill", "none")
@@ -88,26 +92,24 @@ var radial_tree = {
             .attr("stroke", "white");
 
         g.selectAll("text").on("click", function(d) {
-                if (window.curr_selection != undefined) {
-                    window.curr_selection.attr('class', 'black_text')
-                }
-                txt = d3.select(this)
-                txt.attr('class', "red_text")
-                the_id = d.data.id
-                graph_data.changeCurrentNode(the_id)
-                test = `#${the_id}`
-                window.curr_selection = txt
-                console.log("hello " + d.data.name);
-            })
-            // .onclick("click();");
-            // d3.select("body").style("background-color", "black");
+            if (window.curr_selection != undefined) {
+                window.curr_selection.attr('class', 'black_text')
+            }
+            txt = d3.select(this)
+            txt.attr('class', "red_text")
+            the_id = d.data.id
+            graph_data.changeCurrentNode(the_id)
+            test = `#${the_id}`
+            window.curr_selection = txt
+            console.log("hello " + d.data.name);
+        })
 
-
-        // _width2 = width * 2 + 90
-        // _width1 = (width + 40)
-        // const viewbox = `-${_width1} -${_width1} ${_width2} ${_width2}`
-        // svg.attr("viewBox", viewbox)
-        g.attr("viewBox", autoBox(this.zoom / 10))
+        svg.attr("viewBox", autoBox(this.zoom / 10))
+        the_g = g.node()
+            // d3.zoomTransform(the_g, this.transform_attr)
+        svg.call(d3.zoom().transform, this.transform_attr);
+        g.attr("transform", this.transform_attr.toString())
+            // d3.zoom().transform(the_g, this.transform_attr.x, this.transform_attr.y)
     }
 }
 curr_selection = $('#id_1')

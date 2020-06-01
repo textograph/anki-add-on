@@ -48,7 +48,6 @@ $("#mini-toolbar").on('click', 'div', function() {
             case "below":
                 graph_data.addSibling(selected_text)
                 break;
-
             default:
                 break;
         }
@@ -82,19 +81,19 @@ $("#toolbar").on('click', 'div', function() {
     switch (the_id) {
         case "web":
             drawer = radial_tree;
-            json = graph_data.stratify();
-            var data = d3.hierarchy(json);
-            drawer.draw(data);
             break;
         case "tree":
             drawer = chart_tree;
-            json = graph_data.stratify();
-            var data = d3.hierarchy(json);
-            drawer.draw(data);
             break;
         default:
             break;
     }
+    // there should be some code to set the zoming and radius slider based on level of corresponding drawer value
+    viewBoxSlider.value = drawer.zoom
+    radiusSlider.value = drawer.radius
+    json = graph_data.stratify();
+    var data = d3.hierarchy(json);
+    drawer.draw(data);
     // alert("You clicked on li " + $("#save_area").val());
     // var json = JSON.stringify([...graph_data.nodes.values()]);
     // $("#save_area").text("data = " + json + ";graph_data.setData(data)")

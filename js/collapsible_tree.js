@@ -9,6 +9,7 @@ var chart_tree = {
     width: 90,
     radius: 10,
     data: null,
+    transform_attr: d3.zoomIdentity,
     refresh() {
         this.tree = d3.tree().nodeSize([this.dx, this.dy * this.radius])
         this.update(this.data);
@@ -40,7 +41,8 @@ var chart_tree = {
             .style("user-select", "none")
             .attr("id", "svg_canvas")
             .call(d3.zoom().on("zoom", function() {
-                svg.select("g").attr("transform", d3.event.transform)
+                chart_tree.transform_attr = d3.zoomTransform(this);
+                svg.select("g").attr("transform", chart_tree.transform_attr)
             }));
         var g = svg.select("g")
         g.selectAll("g").remove()
@@ -145,6 +147,8 @@ var chart_tree = {
                 d.x0 = d.x;
                 d.y0 = d.y;
             });
+            svg.call(d3.zoom().transform, this.transform_attr);
+            g.attr("transform", this.transform_attr.toString())
         }
         this.update(root);
         this.data = root; //save data for later use and refresh
