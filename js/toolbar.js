@@ -57,11 +57,11 @@ $("#mini-toolbar").on('click', 'div', function() {
 
         const json = graph_data.stratify();
         var data = d3.hierarchy(json);
-        drawer(data, (data.height + 1) * radius);
+        drawer.draw(data);
         wrap_svg_texts();
         //save current json into the document
         json_str = JSON.stringify(json)
-        $("#save_area").text(json_str)
+        $("#save_area").text(`json_data=${json_str}; graph_data.setData(json_data);`)
             // alert("You clicked on li " + $(this).text());
     }
 
@@ -81,17 +81,16 @@ $("#toolbar").on('click', 'div', function() {
     the_id = $(this).attr("id")
     switch (the_id) {
         case "web":
-            var radius = 100;
-            drawer = chart;
+            drawer = radial_tree;
             json = graph_data.stratify();
             var data = d3.hierarchy(json);
-            drawer(data, (data.height + 1) * radius);
+            drawer.draw(data);
             break;
         case "tree":
             drawer = chart_tree;
             json = graph_data.stratify();
             var data = d3.hierarchy(json);
-            drawer(data, document.body.clientWidth);
+            drawer.draw(data);
             break;
         default:
             break;
@@ -101,3 +100,20 @@ $("#toolbar").on('click', 'div', function() {
     // $("#save_area").text("data = " + json + ";graph_data.setData(data)")
 
 });
+
+var viewBoxSlider = document.getElementById("sliderViewBox");
+var radiusSlider = document.getElementById("sliderRadius");
+
+//var output = document.getElementById("demo");
+//output.innerHTML = slider.value;
+
+radiusSlider.oninput = function() {
+    drawer.radius = this.value;
+    drawer.refresh();
+
+}
+
+viewBoxSlider.oninput = function() {
+    drawer.changeZoom(this.value);
+    console.log(this.value);
+}
