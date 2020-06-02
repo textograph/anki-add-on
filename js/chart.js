@@ -45,6 +45,7 @@ var radial_tree = {
                 radial_tree.transform_attr = d3.zoomTransform(this);
                 svg.select("g").attr("transform", radial_tree.transform_attr)
             }));
+
         var g = svg.select("g");
         g.selectAll("g").remove()
         g.append("g")
@@ -88,6 +89,7 @@ var radial_tree = {
             .attr("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
             .text(d =>
                 d.data.name)
+            .call(wrap_text)
             .clone(true).lower()
             .attr("stroke", "white");
 
@@ -104,7 +106,20 @@ var radial_tree = {
             console.log("hello " + d.data.name);
         })
 
-        svg.attr("viewBox", autoBox(this.zoom / 10))
+        tip = d3.tip().direction('e')
+            .attr('class', 'd3-tip')
+            .html(function(d) {
+                the_note = graph_data.getNote(d.data.note_id).note
+                node_name = d.data.name
+                var res = the_note.replace(new RegExp(`(${node_name})`), '<span id="name_word"><b>$1</b></span>');
+                return res;
+            });
+        svg.call(tip);
+        g.selectAll("text")
+            .on("mouseover", function(d) { tip.show(d); })
+            .on('mouseout', tip.hide)
+
+        svg.attr("viewBox", [-300, -300, 600, 600])
         the_g = g.node()
             // d3.zoomTransform(the_g, this.transform_attr)
         svg.call(d3.zoom().transform, this.transform_attr);
@@ -121,12 +136,18 @@ function wrap_svg_texts() {
     }
 }
 
+function wrap_text(d) {
+
+    d.select(function(d, i) {
+        wrap_svg_text(this);
+    })
+}
 
 function wrap_svg_text(element) {
 
     let x = 0;
-    let y = 12;
-    let width = 15;
+    let y = 0;
+    let width = 90;
     let lineHeight = 10;
 
 
@@ -153,6 +174,7 @@ function wrap_svg_text(element) {
         if (testWidth > width && n > 0) {
             element.innerHTML += '<tspan x="0" dy="' + y + '">' + line + '</tspan>';
             line = words[n] + ' ';
+            y = lineHeight;
         } else {
             line = testLine;
         }

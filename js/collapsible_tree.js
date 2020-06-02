@@ -2,7 +2,7 @@ var chart_tree = {
     margin: ({ top: 10, right: 120, bottom: 10, left: 40 }),
     dy: document.body.clientWidth / 200,
     height: 10,
-    dx: 10,
+    dx: 15,
     top: 0,
     diagonal: d3.linkHorizontal().x(d => d.y).y(d => d.x),
     zoom: 10,

@@ -16,7 +16,8 @@
     "dependencies": {
         "d3": "5",
         "jquery": "3.5.1",
-        "undernet": "3.5.1"
+        "undernet": "3.5.1",
+        "d3-tip": "https://github.com/VACLab/d3-tip"
     },
     "bugs": {
         "url": "https://github.com/amsaravi/textograph/issues"

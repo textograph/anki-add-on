@@ -48,6 +48,10 @@ $("#mini-toolbar").on('click', 'div', function() {
             case "below":
                 graph_data.addSibling(selected_text)
                 break;
+            case "note":
+                note = graph_data.addNote(selected_text)
+                graph_data.changeCurrentNote(note.id)
+                return;
             default:
                 break;
         }
@@ -57,7 +61,6 @@ $("#mini-toolbar").on('click', 'div', function() {
         const json = graph_data.stratify();
         var data = d3.hierarchy(json);
         drawer.draw(data);
-        wrap_svg_texts();
         //save current json into the document
         json_str = JSON.stringify(json)
         $("#save_area").text(`json_data=${json_str}; graph_data.setData(json_data);`)
@@ -109,7 +112,6 @@ var radiusSlider = document.getElementById("sliderRadius");
 radiusSlider.oninput = function() {
     drawer.radius = this.value;
     drawer.refresh();
-
 }
 
 viewBoxSlider.oninput = function() {
