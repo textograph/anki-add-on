@@ -61,7 +61,6 @@ $("#mini-toolbar").on('click', 'div', function() {
         const json = graph_data.stratify();
         var data = d3.hierarchy(json);
         drawer.draw(data);
-        wrap_svg_texts();
         //save current json into the document
         json_str = JSON.stringify(json)
         $("#save_area").text(`json_data=${json_str}; graph_data.setData(json_data);`)
@@ -98,7 +97,6 @@ $("#toolbar").on('click', 'div', function() {
     json = graph_data.stratify();
     var data = d3.hierarchy(json);
     drawer.draw(data);
-    wrap_svg_texts();
     // alert("You clicked on li " + $("#save_area").val());
     // var json = JSON.stringify([...graph_data.nodes.values()]);
     // $("#save_area").text("data = " + json + ";graph_data.setData(data)")
@@ -114,7 +112,6 @@ var radiusSlider = document.getElementById("sliderRadius");
 radiusSlider.oninput = function() {
     drawer.radius = this.value;
     drawer.refresh();
-
 }
 
 viewBoxSlider.oninput = function() {

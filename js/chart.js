@@ -89,6 +89,7 @@ var radial_tree = {
             .attr("text-anchor", d => d.x < Math.PI === !d.children ? "start" : "end")
             .text(d =>
                 d.data.name)
+            .call(wrap_text)
             .clone(true).lower()
             .attr("stroke", "white");
 
@@ -135,12 +136,18 @@ function wrap_svg_texts() {
     }
 }
 
+function wrap_text(d) {
+
+    d.select(function(d, i) {
+        wrap_svg_text(this);
+    })
+}
 
 function wrap_svg_text(element) {
 
     let x = 0;
-    let y = 12;
-    let width = 15;
+    let y = 0;
+    let width = 90;
     let lineHeight = 10;
 
 
@@ -167,6 +174,7 @@ function wrap_svg_text(element) {
         if (testWidth > width && n > 0) {
             element.innerHTML += '<tspan x="0" dy="' + y + '">' + line + '</tspan>';
             line = words[n] + ' ';
+            y = lineHeight;
         } else {
             line = testLine;
         }
