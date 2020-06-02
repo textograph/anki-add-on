@@ -48,6 +48,10 @@ $("#mini-toolbar").on('click', 'div', function() {
             case "below":
                 graph_data.addSibling(selected_text)
                 break;
+            case "note":
+                note = graph_data.addNote(selected_text)
+                graph_data.changeCurrentNote(note.id)
+                return;
             default:
                 break;
         }
@@ -94,6 +98,7 @@ $("#toolbar").on('click', 'div', function() {
     json = graph_data.stratify();
     var data = d3.hierarchy(json);
     drawer.draw(data);
+    wrap_svg_texts();
     // alert("You clicked on li " + $("#save_area").val());
     // var json = JSON.stringify([...graph_data.nodes.values()]);
     // $("#save_area").text("data = " + json + ";graph_data.setData(data)")

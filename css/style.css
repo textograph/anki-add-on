@@ -18,9 +18,10 @@
     /* height: 0vmax; */
 }
 
-text{
+text {
     cursor: pointer;
 }
+
 .clm-wide1 {
     /* height: 600px; */
     max-width: 65%;

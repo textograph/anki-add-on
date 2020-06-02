@@ -8,12 +8,13 @@ class GraphNode {
 
 var graph_data = {
     nodes: new Map(),
-    notes: {},
+    notes: new Map(),
     current_node: null,
     root_node: null,
     current_note: null,
     current_depth: 0,
     auto_inc_id: 0,
+    note_auto_id: 0,
     createNodeFromCache() {
         node = "";
         return node;
@@ -22,8 +23,13 @@ var graph_data = {
     addChildTo(node, parent = null, data = null) {
         // adds new node to nodes repo, increases autonumber, 
         //  and makes currnt_node pointer to point to the newly created node
+        if (this.current_note == null) {
+            window.alert("no note is specified, please select some text and specify it as your current note")
+            return;
+        }
+
         if (data == null) {
-            data = {}
+            data = { note_id: this.current_note.id }
         }
         if (typeof node === "string") {
 
@@ -83,6 +89,13 @@ var graph_data = {
         }
 
     },
+    addNote(txt_note) {
+        this.notes.set(this.note_auto_id, {
+            id: this.note_auto_id,
+            note: txt_note
+        })
+        return this.notes.get(this.note_auto_id++)
+    },
     getNodes() {},
     getParentN() {},
     stratify() {
@@ -111,6 +124,12 @@ var graph_data = {
     changeCurrentNode(id) {
         this.current_node = this.nodes.get(id);
     },
+    changeCurrentNote(note_id) {
+        this.current_note = this.notes.get(note_id)
+    },
+    getNote(id) {
+        return this.notes.get(id)
+    },
     getActiveNode() {
         return this.current_node;
     }
@@ -125,6 +144,7 @@ function get_childrenof(parent, nodes) {
             new_node = {
                 id: node.id,
                 name: node.name,
+                note_id: node.note_id,
                 children: get_childrenof(node, nodes)
             };
             tmp_arr.push(new_node);
@@ -138,7 +158,8 @@ function destratify(node, parent = null) {
     let cur_obj = {
         id: node.id,
         name: node.name,
-        parent: parent
+        parent: parent,
+        note_id: node.note_id
     }
     node.children.forEach(child => {
         child_arr = child_arr.concat(destratify(child, cur_obj))

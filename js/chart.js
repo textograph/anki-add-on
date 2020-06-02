@@ -45,6 +45,7 @@ var radial_tree = {
                 radial_tree.transform_attr = d3.zoomTransform(this);
                 svg.select("g").attr("transform", radial_tree.transform_attr)
             }));
+
         var g = svg.select("g");
         g.selectAll("g").remove()
         g.append("g")
@@ -104,7 +105,18 @@ var radial_tree = {
             console.log("hello " + d.data.name);
         })
 
-        svg.attr("viewBox", autoBox(this.zoom / 10))
+        tip = d3.tip().direction('e')
+            .attr('class', 'd3-tip')
+            .html(function(d) {
+                the_note = graph_data.notes.get(d.data.note_id).note
+                return the_note;
+            });
+        svg.call(tip);
+        g.selectAll("text")
+            .on("mouseover", function(d) { tip.show(d); })
+            .on('mouseout', tip.hide)
+
+        svg.attr("viewBox", [-300, -300, 600, 600])
         the_g = g.node()
             // d3.zoomTransform(the_g, this.transform_attr)
         svg.call(d3.zoom().transform, this.transform_attr);
