@@ -93,19 +93,6 @@ var radial_tree = {
             .clone(true).lower()
             .attr("stroke", "white");
 
-        g.selectAll("text").on("click", function(d) {
-            if (window.curr_selection != undefined) {
-                window.curr_selection.attr('class', 'black_text')
-            }
-            txt = d3.select(this)
-            txt.attr('class', "red_text")
-            the_id = d.data.id
-            graph_data.changeCurrentNode(the_id)
-            test = `#${the_id}`
-            window.curr_selection = txt
-            console.log("hello " + d.data.name);
-        })
-
         tip = d3.tip().direction('e')
             .attr('class', 'd3-tip')
             .html(function(d) {
@@ -117,7 +104,22 @@ var radial_tree = {
         svg.call(tip);
         g.selectAll("text")
             .on("mouseover", function(d) { tip.show(d); })
-            .on('mouseout', tip.hide)
+            .on('mouseout', function(d) { tip.hide(d); })
+
+        g.selectAll("text").on("click", function(d) {
+            if (drawer.curr_selection != null) {
+                drawer.curr_selection.attr('class', 'black_text')
+            }
+            txt = d3.select(this)
+            txt.attr('class', "red_text")
+            the_id = d.data.id
+            graph_data.changeCurrentNode(the_id)
+            test = `#${the_id}`
+            drawer.curr_selection = txt
+            console.log("hello " + d.data.name);
+        })
+
+
 
         svg.attr("viewBox", [-300, -300, 600, 600])
         the_g = g.node()

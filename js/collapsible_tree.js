@@ -10,6 +10,7 @@ var chart_tree = {
     radius: 10,
     data: null,
     transform_attr: d3.zoomIdentity,
+    curr_selection: null,
     refresh() {
         this.tree = d3.tree().nodeSize([this.dx, this.dy * this.radius])
         this.update(this.data);
@@ -32,7 +33,7 @@ var chart_tree = {
         root.descendants().forEach((d, i) => {
             d.id = i;
             d._children = d.children;
-            if (d.depth && d.data.name.length !== 7) d.children = null;
+            // if (d.depth && d.data.name.length !== 7) d.children = null;
         });
         var svg = d3.select('#chart')
             .select("svg")
@@ -82,14 +83,26 @@ var chart_tree = {
             // Update the nodes…
             const node = gNode.selectAll("g")
                 .data(nodes, d => d.id);
+            tip = d3.tip().direction('e')
+                .attr('class', 'd3-tip')
+                .html(function(d) {
+                    the_note = graph_data.getNote(d.data.note_id).note
+                    node_name = d.data.name
+                    var res = the_note.replace(new RegExp(`(${node_name})`), '<span id="name_word"><b>$1</b></span>');
+                    return res;
+                });
+            svg.call(tip);
 
             // Enter any new nodes at the parent's previous position.
             const nodeEnter = node.enter().append("g")
                 .attr("transform", d => `translate(${source.y0},${source.x0})`)
                 .attr("fill-opacity", 0)
                 .attr("stroke-opacity", 0)
+                .on("mouseover", function(d) { tip.show(d); })
+                .on('mouseout', function(d) { tip.hide(d); })
                 .on("click", d => {
                     d.children = d.children ? null : d._children;
+                    tip.hide(d);
                     this.update(d);
                 });
 
@@ -147,6 +160,20 @@ var chart_tree = {
                 d.x0 = d.x;
                 d.y0 = d.y;
             });
+
+
+            g.selectAll("text").on("click", function(d) {
+                if (drawer.curr_selection != null) {
+                    drawer.curr_selection.attr('class', 'black_text')
+                }
+                txt = d3.select(this)
+                txt.attr('class', "red_text")
+                the_id = d.data.id
+                graph_data.changeCurrentNode(the_id)
+                test = `#${the_id}`
+                drawer.curr_selection = txt
+                console.log("hello " + d.data.name);
+            })
             svg.call(d3.zoom().transform, this.transform_attr);
             g.attr("transform", this.transform_attr.toString())
         }
