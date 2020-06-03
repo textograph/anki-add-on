@@ -172,6 +172,7 @@ var chart_tree = {
                 graph_data.changeCurrentNode(the_id)
                 test = `#${the_id}`
                 drawer.curr_selection = txt
+                drawer.curr_hierarchy_node = d
                 console.log("hello " + d.data.name);
             })
             svg.call(d3.zoom().transform, this.transform_attr);

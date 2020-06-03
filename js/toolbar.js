@@ -80,6 +80,7 @@ $("#mini-toolbar").on('mousedown', 'div', function() {
 $("#toolbar").on('click', 'div', function() {
 
     // console.log($("#save_area").text())
+
     the_id = $(this).attr("id")
     switch (the_id) {
         case "web":
@@ -92,23 +93,51 @@ $("#toolbar").on('click', 'div', function() {
             break;
     }
     // there should be some code to set the zoming and radius slider based on level of corresponding drawer value
-    viewBoxSlider.value = drawer.zoom
-    radiusSlider.value = drawer.radius
-    json = graph_data.stratify();
-    var data = d3.hierarchy(json);
-    drawer.draw(data);
+    redraw_graph();
     // alert("You clicked on li " + $("#save_area").val());
     // var json = JSON.stringify([...graph_data.nodes.values()]);
     // $("#save_area").text("data = " + json + ";graph_data.setData(data)")
 
 });
 
+function redraw_graph() {
+    // puts new data into chart and draws the chart from scratch
+    viewBoxSlider.value = drawer.zoom
+    radiusSlider.value = drawer.radius
+    json = graph_data.stratify();
+    var data = d3.hierarchy(json);
+    drawer.draw(data);
+}
+
 var viewBoxSlider = document.getElementById("sliderViewBox");
 var radiusSlider = document.getElementById("sliderRadius");
-
+var show_quiz_leaves_label = document.getElementById("quiz-leaves-label");
+var show_quiz_leaves = document.getElementById("quiz-leaves");
 //var output = document.getElementById("demo");
 //output.innerHTML = slider.value;
-
+show_quiz_leaves_label.onchange = function() {
+    let active_node = graph_data.getActiveNode()
+    if (show_quiz_leaves.checked) {
+        if (active_node == null) {
+            alert("please select a node first")
+            show_quiz_leaves.checked = false
+            return
+        }
+        // copy current graph_data to save its data from being changed
+        graph_data = Object.assign({}, graph_data, { nodes: new Map() })
+        new_data = graph_data_copy.stratify(active_node)
+        graph_data.setData(new_data)
+        redraw_graph()
+        const quiz = d3.select("#text-column")
+            .append("div")
+            .attr("id", "quiz_choices")
+    } else {
+        delete graph_data
+        graph_data = graph_data_copy
+        redraw_graph()
+        d3.select("#quiz_choices").remove()
+    }
+}
 radiusSlider.oninput = function() {
     drawer.radius = this.value;
     drawer.refresh();
