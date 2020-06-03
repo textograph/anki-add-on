@@ -98,10 +98,13 @@ var graph_data = {
     },
     getNodes() {},
     getParentN() {},
-    stratify() {
+    stratify(parent = null) {
         nodes = [...this.nodes.values()]
-            // parent = this.nodes.get(0)
-        return get_childrenof(null, nodes)[0] //parent is null so it returns all hierarchy including root
+        if (parent == null) {
+            root_id = Math.min(...this.nodes.keys())
+            parent = this.nodes.get(root_id)
+        }
+        return stratify(parent, nodes) //parent is null so it returns all hierarchy including root
     },
     setData(json) {
         tmp_arr = destratify(json, null)
@@ -110,8 +113,9 @@ var graph_data = {
         tmp_arr.forEach(node => {
             this.nodes.set(node.id, node)
         });
-        this.root_node = this.nodes.get(0)
-        this.changeCurrentNode(0)
+        root_id = Math.min(...this.nodes.keys())
+        this.root_node = this.nodes.get(root_id)
+        this.changeCurrentNode(root_id)
         this.auto_inc_id = Math.max(...this.nodes.keys()) + 1
 
     },
@@ -136,21 +140,21 @@ var graph_data = {
 
 }
 
-function get_childrenof(parent, nodes) {
-    let tmp_arr = []
-    nodes.forEach((node, index, nodes) => {
+
+function stratify(parent, nodes) {
+    const new_node = {
+        id: parent.id,
+        name: parent.name,
+        note_id: parent.note_id,
+        children: new Array()
+    }
+    nodes.forEach((node, index) => {
         if (node.parent == parent) {
             delete nodes[index]
-            new_node = {
-                id: node.id,
-                name: node.name,
-                note_id: node.note_id,
-                children: get_childrenof(node, nodes)
-            };
-            tmp_arr.push(new_node);
-        };
+            new_node.children.push(stratify(node, nodes))
+        }
     });
-    return tmp_arr;
+    return new_node
 }
 
 function destratify(node, parent = null) {
@@ -167,3 +171,4 @@ function destratify(node, parent = null) {
     child_arr.push(cur_obj)
     return child_arr;
 }
+var graph_data_copy = graph_data
