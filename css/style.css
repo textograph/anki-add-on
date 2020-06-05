@@ -136,8 +136,23 @@ text {
     background-color: white;
     left: 0;
     top: 0;
+    display: flex;
+    flex-wrap: wrap;
+     align-content: flex-start;
+    overflow: scroll;
 }
 
+.answer{
+    display: inline-block;
+    background-color: lightblue;
+    font-size: 1.5em;
+    margin: 5px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: black;
+    height: auto;
+    cursor: pointer;
+}
 .switch {
     position: relative;
     display: inline-block;
