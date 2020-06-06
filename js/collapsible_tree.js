@@ -31,7 +31,7 @@ var chart_tree = {
         root.x0 = this.dy / 2;
         root.y0 = 0;
         root.descendants().forEach((d, i) => {
-            d.id = i;
+            if (!d.id) d.id = i;
             d._children = d.children;
             // if (d.depth && d.data.name.length !== 7) d.children = null;
         });

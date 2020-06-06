@@ -8,7 +8,7 @@ function gText(e) {
         document.getSelection().toString() :
         document.selection.createRange().toString();
     t = selection
-    if (selection) {
+    if (selection && !show_quiz_leaves.checked) {
         toolbar = $("#mini-toolbar");
         X = e.clientX - (toolbar.width() / 2);
         Y = e.clientY;
@@ -156,11 +156,12 @@ function getQuiz() {
             .text(d => d.data.name)
             .on("click", function(d, i) {
                 if (d.parent.data.id == graph_data.getActiveNode().id) {
-                    d.id = d.data.id
+
                     if (d.parent.children == null) {
                         d.parent.children = new Array
                     }
                     d.parent.children.push(d)
+                    d.parent._children = d.parent.children
                     d3.select(this).node().remove()
                     drawer.refresh();
                 } else {
@@ -186,11 +187,12 @@ viewBoxSlider.oninput = function() {
 }
 
 function remove_leaves(hierarchy) {
-    hierarchy.descendants().forEach((d) => {
+    hierarchy.descendants().forEach((d, i) => {
+        d.id = i;
         if (d.height == 1) {
             // this node only have leaves so we can remove all children at once
-            // delete d.children;
-            d.children = null;
+            delete d.children;
+            // d.children = null;
         } else if (d.height != 0) {
             // just remove children that are leaves
             let new_children = new Array;
