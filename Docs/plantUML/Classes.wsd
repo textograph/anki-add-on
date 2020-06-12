@@ -1,0 +1,91 @@
+@startuml model
+'#################### Graphdata class ##################
+class Graph_Data {
+  Map nodes
+  Map notes
+  current_node
+  auto_inc_id
+  note_auto_id
+--------------- Adding Node ----------------
+ addChildTo(node, parent = null, data = null)
+ addChild(node)
+ addSibling(node) 
+ addUncle(node)
+ addNote(txt_note) 
+ ------------ working with Mass data ---------
+ setData(json)
+ stratify(parent = null)
+ getJsonStr() 
+ eraseData() 
+------------- Moving Around nodes ------------
+ changeCurrentNode(id)
+ getActiveNode()
+ changeCurrentNote(note_id)
+ getNote(id)
+}
+
+'#################### Hierarchy class ##################
+
+class Hierarchy{
+   Array children
+   x
+   y
+   parent
+   node data : our data stores here
+   height :  from distant leaf
+   depth : from root
+   ----
+   forEach()
+   forEachBefor()
+   foEachAfter()
+   descendants()
+   leaves()
+   -- just  collapsible tree --
+   id
+   Array _children
+}
+note "stores nodes as a id, key dic" as nodes_note
+note "stores notes as a id, key dic" as notes_note
+package "Are Dictinaries" <<database>> #DDDDDD{
+    class note << (D,orchid) >> {
+        id
+        String note
+    }
+    class node << (D,orchid) >> {
+        id
+        name
+        note_id
+        node parent
+    }
+     
+}
+Class chart_tree{
+    zoom
+    width
+    
+    radius
+    Hierarchy data
+    changeZoom(zoom)
+    autoBox()
+    draw(root)
+    refresh()
+}
+' #################### D3 classes  ##################
+class d3
+class d3.tree
+class Collapsible_Tree
+class Radial_Tree
+' #################### Links  ##################
+d3<|--"d3.tree"
+Hierarchy--|>d3
+Hierarchy--*Collapsible_Tree
+Hierarchy--*Radial_Tree
+
+"d3.tree" <|-- Collapsible_Tree
+"d3.tree" <|-- Radial_Tree
+nodes_note .. node
+notes_note .. note
+node "*" --o "1" Graph_Data :has
+note "*" --o "1" Graph_Data : has 
+
+@enduml
