@@ -31,7 +31,7 @@ var chart_tree = {
         root.x0 = this.dy / 2;
         root.y0 = 0;
         root.descendants().forEach((d, i) => {
-            d.id = i;
+            if (!d.id) d.id = i;
             d._children = d.children;
             // if (d.depth && d.data.name.length !== 7) d.children = null;
         });
@@ -172,6 +172,7 @@ var chart_tree = {
                 graph_data.changeCurrentNode(the_id)
                 test = `#${the_id}`
                 drawer.curr_selection = txt
+                drawer.curr_hierarchy_node = d
                 console.log("hello " + d.data.name);
             })
             svg.call(d3.zoom().transform, this.transform_attr);
