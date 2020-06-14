@@ -52,6 +52,7 @@ server = {
         this.fetch_page_by_url(url)
     },
     fetch_page_by_url(url) {
+        if (!url) return
         server_obj = this
         $.ajax({
             url: url,
@@ -84,15 +85,19 @@ server = {
                 if (pg_low <= 0) pg_low = 1
 
                 // these lines of codes makes array of {url,label} object for each page
+                function _fix(url) {
+                    if (url)
+                        return url + `&per_page=${data.per_page}`
+                }
                 pages_range = [
-                    { url: data.first_page_url, label: "<<" },
-                    { url: data.prev_page_url, label: "<" },
+                    { url: _fix(data.first_page_url), label: "<<" },
+                    { url: _fix(data.prev_page_url), label: "<" },
                     ...range(pg_low, pg_top,
                         page_no => server_obj.make_url_from_path(
                             data.path, page_no, data.per_page
                         )),
-                    { url: data.next_page_url, label: ">" },
-                    { url: data.last_page_url, label: ">>" }
+                    { url: _fix(data.next_page_url), label: ">" },
+                    { url: _fix(data.last_page_url), label: ">>" }
                 ]
 
                 // add pagination to DOM
@@ -102,9 +107,7 @@ server = {
                     .join("a")
                     .attr("class", d => (d.label == data.current_page) ? "active_page" : "")
                     .text(d => d.label)
-                    .on("click", function(d, i) {
-                        server_obj.fetch_page_by_url(d.url)
-                    });
+                    .on("click", d => server_obj.fetch_page_by_url(d.url));
             }
         });
 
