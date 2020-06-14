@@ -40,15 +40,20 @@ server = {
     create_path(servAddr) {
         return servAddr + "/api/graphs"
     },
-    make_url_from_scratch(servAddr, page_no, per_page) {
+    make_url_from_scratch(servAddr, url_vars) {
         path_addr = this.create_path(servAddr)
-        return this.make_url_from_path(path_addr, page_no, per_page)
+        return this.make_url(path_addr, url_vars)
     },
-    make_url_from_path(path_addr, page_no, per_page) {
-        return path_addr + `?per_page=${per_page}&page=${page_no}`
+    make_url(path_addr, url_vars) {
+        params = []
+        for (param in url_vars)
+            if (url_vars[param] != "")
+                params.push(`${param}=${url_vars[param]}`)
+        return path_addr + "?" + params.join("&")
+
     },
     get_firstpage() {
-        const url = this.make_url_from_scratch(this.address, 1, 3)
+        const url = this.make_url_from_scratch(this.address, { per_page: 3 })
         this.saved_url = null
         this.fetch_page_by_url(url)
     },
@@ -102,7 +107,11 @@ server = {
                 // add pagination                
                 add_pagination(
                     data,
-                    (d, page_no) => d.path + `?per_page=${d.per_page}&page=${page_no}`,
+                    (d, page_no) => server_obj.make_url(
+                        d.path, {
+                            per_page: d.per_page,
+                            page: page_no
+                        }),
                     d => server_obj.fetch_page_by_url(d)
                 );
                 server_obj.busy = false;
@@ -120,6 +129,7 @@ server = {
 
 function add_pagination(data, make_url_func, call_url_func) {
     // calculate upper and lower range
+    // very long .... could be smaller i think, may be later
     half_range = 3;
     pg_low = (data.current_page <= half_range) ? 1 : data.current_page - half_range;
     pg_top = pg_low + half_range * 2;
