@@ -1,0 +1,8 @@
+@startuml
+left to right direction
+
+:user: -- (select graph to open)
+:user: -- (search in list of graphs)
+:user: -- (cancel operation)
+(search in list of graphs) "<<extends>>" ---> (get list)
+@enduml

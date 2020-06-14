@@ -1,0 +1,36 @@
+fork does not     work also for  repeate
+
+@startuml
+
+|Swimlane1|
+
+start
+
+:show get name dialog;
+
+fork
+
+:Cancel;
+
+fork again
+
+repeat :get name from user;
+
+backward:Show Error: Name exists;
+
+repeat while (name not exist in database?)
+
+|Swimlane2|
+:add graph to jason obj;
+:add version to json obj;
+:add notes and user text to json;
+
+|Swimlane1|
+
+:send json to server;
+
+end fork
+
+stop
+
+@enduml
