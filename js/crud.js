@@ -105,7 +105,9 @@ server = {
                 lst_div.selectAll("graph")
                     .data(data.data)
                     .join("graph")
-                    .attr("class", "column.is-xs-12.is-lg-4")
+                    // .attr("class", "column.is-xs-12.is-lg-4")
+                    .on("click",
+                        d => server_obj.open_graph(data.path + "/" + d.id))
                     .html(d => `<span class="number">${d.id}</span>` + d.name)
 
                 // add pagination                
@@ -131,8 +133,23 @@ server = {
     search(graph_name) {
 
     },
-    open() {
-
+    open_graph(url) {
+        if (!url) return
+        server_obj = this
+        $.ajax({
+            url: url,
+            type: 'get',
+            dataType: 'json',
+            contentType: 'application/json',
+            error: function(xhr, status, error) {
+                var err = xhr.responseText;
+                server_obj.busy = false
+                alert(err.Message);
+            },
+            success: function(data) {
+                console.log(data)
+            }
+        })
     }
 }
 
