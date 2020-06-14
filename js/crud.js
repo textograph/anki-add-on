@@ -4,12 +4,16 @@ var div_graph_list = document.getElementById("graph-list");
 
 server = {
     address: "http://testtextograph.digitaltoxicity.ir",
+    graph_name: "",
     setAdress(address) {
         // we can validate entered address here, may be in future
         if (address.trim() == "")
             this.address = "http://testtextograph.digitaltoxicity.ir";
         else
             this.address = address
+    },
+    setSearchTerm(name) {
+        this.graph_name = name;
     },
     save(e) {
         version = "0.0.1"
@@ -53,7 +57,7 @@ server = {
 
     },
     get_firstpage() {
-        const url = this.make_url_from_scratch(this.address, { per_page: 3 })
+        const url = this.make_url_from_scratch(this.address, { per_page: 3, name: this.graph_name })
         this.saved_url = null
         this.fetch_page_by_url(url)
     },
@@ -110,9 +114,14 @@ server = {
                     (d, page_no) => server_obj.make_url(
                         d.path, {
                             per_page: d.per_page,
-                            page: page_no
+                            page: page_no,
+                            name: server_obj.graph_name
                         }),
-                    d => server_obj.fetch_page_by_url(d)
+                    d => server_obj.fetch_page_by_url(d),
+                    _fix = function(url) {
+                        if (url)
+                            return url + `&per_page=${data.per_page}&name=${server_obj.graph_name}`;
+                    }
                 );
                 server_obj.busy = false;
             }
@@ -127,7 +136,7 @@ server = {
     }
 }
 
-function add_pagination(data, make_url_func, call_url_func) {
+function add_pagination(data, make_url_func, call_url_func, _fix) {
     // calculate upper and lower range
     // very long .... could be smaller i think, may be later
     half_range = 3;
@@ -140,10 +149,7 @@ function add_pagination(data, make_url_func, call_url_func) {
     if (pg_low <= 0)
         pg_low = 1;
     // these lines of codes makes array of {url,label} object for each page
-    function _fix(url) {
-        if (url)
-            return url + `&per_page=${data.per_page}`;
-    }
+
     pages_range = [
         { url: _fix(data.first_page_url), label: "<<" },
         { url: _fix(data.prev_page_url), label: "<" },
