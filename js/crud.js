@@ -42,18 +42,42 @@ server = {
     },
     make_url_from_scratch(servAddr, page_no, per_page) {
         path_addr = this.create_path(servAddr)
-        return path_addr + `?per_page=${per_page}&page=${page_no}`
+        return this.make_url_from_path(path_addr, page_no, per_page)
     },
     make_url_from_path(path_addr, page_no, per_page) {
         return path_addr + `?per_page=${per_page}&page=${page_no}`
     },
     get_firstpage() {
         const url = this.make_url_from_scratch(this.address, 1, 3)
+        this.saved_url = null
         this.fetch_page_by_url(url)
     },
     fetch_page_by_url(url) {
+        if (this.busy) {
+            this.saved_url = url
+            if (this.timer == null) {
+                console.log("timout started")
+                this.timer = setTimeout(() => {
+                    console.log("timout ended")
+                    this.timer = null
+                    this.get_url(this.saved_url)
+                    this.saved_url = null
+                }, 500);
+            } else
+                console.log("timeout has been set")
+        } else {
+            if (this.timer) {
+                clearTimeout(this.timer)
+                console.log("timout removed")
+            }
+            this.timer = null
+            this.get_url(url);
+        }
+    },
+    get_url(url) {
         if (!url) return
         server_obj = this
+        this.busy = true
         $.ajax({
             url: url,
             type: 'get',
@@ -61,10 +85,11 @@ server = {
             contentType: 'application/json',
             error: function(xhr, status, error) {
                 var err = xhr.responseText;
+                server_obj.busy = false
                 alert(err.Message);
             },
             success: function(data) {
-                // add contents list
+                // add contents list                
                 lst_div = d3.select("#graph-list")
                     .attr("class", "is-xs-d-block is-md-d-flex is-xl-d-flex")
                 lst_div.selectAll("graph").remove()
@@ -74,47 +99,56 @@ server = {
                     .attr("class", "column.is-xs-12.is-lg-4")
                     .html(d => `<span class="number">${d.id}</span>` + d.name)
 
-                // add pagination
-                // calculate upper and lower range
-                half_range = 3
-                pg_low = (data.current_page <= half_range) ? 1 : data.current_page - half_range;
-                pg_top = pg_low + half_range * 2;
-                pg_top = (pg_top > data.last_page) ? data.last_page : pg_top;
-                rem_pages = data.last_page - data.current_page
-                if (rem_pages < half_range) pg_low -= (half_range - rem_pages);
-                if (pg_low <= 0) pg_low = 1
-
-                // these lines of codes makes array of {url,label} object for each page
-                function _fix(url) {
-                    if (url)
-                        return url + `&per_page=${data.per_page}`
-                }
-                pages_range = [
-                    { url: _fix(data.first_page_url), label: "<<" },
-                    { url: _fix(data.prev_page_url), label: "<" },
-                    ...range(pg_low, pg_top,
-                        page_no => server_obj.make_url_from_path(
-                            data.path, page_no, data.per_page
-                        )),
-                    { url: _fix(data.next_page_url), label: ">" },
-                    { url: _fix(data.last_page_url), label: ">>" }
-                ]
-
-                // add pagination to DOM
-                div_pages = d3.select("#pages_links")
-                div_pages.selectAll("a")
-                    .data(pages_range)
-                    .join("a")
-                    .attr("class", d => (d.label == data.current_page) ? "active_page" : "")
-                    .text(d => d.label)
-                    .on("click", d => server_obj.fetch_page_by_url(d.url));
+                // add pagination                
+                add_pagination(
+                    data,
+                    (d, page_no) => d.path + `?per_page=${d.per_page}&page=${page_no}`,
+                    d => server_obj.fetch_page_by_url(d)
+                );
+                server_obj.busy = false;
             }
         });
+
+    },
+    search(graph_name) {
 
     },
     open() {
 
     }
+}
+
+function add_pagination(data, make_url_func, call_url_func) {
+    // calculate upper and lower range
+    half_range = 3;
+    pg_low = (data.current_page <= half_range) ? 1 : data.current_page - half_range;
+    pg_top = pg_low + half_range * 2;
+    pg_top = (pg_top > data.last_page) ? data.last_page : pg_top;
+    rem_pages = data.last_page - data.current_page;
+    if (rem_pages < half_range)
+        pg_low -= (half_range - rem_pages);
+    if (pg_low <= 0)
+        pg_low = 1;
+    // these lines of codes makes array of {url,label} object for each page
+    function _fix(url) {
+        if (url)
+            return url + `&per_page=${data.per_page}`;
+    }
+    pages_range = [
+        { url: _fix(data.first_page_url), label: "<<" },
+        { url: _fix(data.prev_page_url), label: "<" },
+        ...range(pg_low, pg_top, page_no => make_url_func(data, page_no)),
+        { url: _fix(data.next_page_url), label: ">" },
+        { url: _fix(data.last_page_url), label: ">>" }
+    ];
+    // add pagination to DOM
+    div_pages = d3.select("#pages_links");
+    div_pages.selectAll("a")
+        .data(pages_range)
+        .join("a")
+        .attr("class", d => (d.label == data.current_page) ? "active_page" : "")
+        .text(d => d.label)
+        .on("click", d => call_url_func(d.url));
 }
 
 function* range(a, b, url_generator) {
@@ -125,13 +159,6 @@ function* range(a, b, url_generator) {
         };
     }
 }
-
-half_range = 5
-pg_low = (data.current_page < 5) ? 1 : data.current_page - half_range;
-pg_top = pg_low + half_range * 2;
-pg_top = (pg_top > data.total) ? data.total : pg_top;
-[...range(pg_low, pg_top)]
-
 
 // MyDialogs = {
 //     Save: {

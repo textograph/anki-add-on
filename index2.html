@@ -102,6 +102,9 @@
                     Server Address
                     <input onkeypress="server.setAdress(this.value)" id="frm-open-server-address" type="text" value="" placeholder="http://testtextograph.digitaltoxicity.ir" />
                   </label>
+                <label>              
+                    <input onkeypress="server.search(this.value)" id="frm-open-search" type="text" value="" placeholder="enter Graph name to search for" />
+                  </label>
                 <div id="graph-list" class="is-xs-d-none is-md-d-flex is-xl-d-block"></div>
                 <div id="pages_links"></div>
             </section>
@@ -110,7 +113,7 @@
             Cancel
           </a>
                 <a id="btn-get-list" class="button is-primary has-no-m-block-end" onclick="server.get_firstpage()">
-            Get List
+            Search
           </a>
             </footer>
         </div>
