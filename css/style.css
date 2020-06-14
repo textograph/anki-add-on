@@ -62,7 +62,7 @@ text {
     opacity: 90%;
     top: 0;
     position: absolute;
-    background: blue;
+    background: rgba(173, 173, 173, 0.6);
     height: 30px;
     display: none;
     width: auto;
@@ -71,13 +71,13 @@ text {
 
 #mini-toolbar div {
     opacity: 100% !important;
-    background: rgb(173, 139, 88);
+    /*     background: rgb(173, 139, 88); */
     width: auto;
     height: 20px;
     margin: 3px;
     border-radius: 2px;
     display: block;
-    font-size: x-small;
+    font-size: 30;
     cursor: pointer;
 }
 
@@ -100,13 +100,15 @@ text {
 
 
 /* view slider for adjusting map size */
+
 *:focus {
     outline: 0;
-      border-color: inherit;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+    border-color: inherit;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
-input:focus{
+
+input:focus {
     outline: none !important;
 }
 
@@ -276,13 +278,13 @@ graph span {
     display: inline-block;
 }
 
-#pages_links{
+#pages_links {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-#pages_links a{
+#pages_links a {
     display: block;
     cursor: pointer;
     color: black;
@@ -290,12 +292,13 @@ graph span {
     border-radius: 10px;
     padding: 0.8em;
     margin: .5em;
-    transition:  background-color .5s;
+    transition: background-color .5s;
 }
-#pages_links a:hover{
-    background-color: orange;
 
+#pages_links a:hover {
+    background-color: orange;
 }
-#pages_links a.active_page{
-    background-color:skyblue;
+
+#pages_links a.active_page {
+    background-color: skyblue;
 }
