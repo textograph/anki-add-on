@@ -54,7 +54,64 @@
 
 
 <body>
-
+    <div id="frm-save" class="modal-overlay" data-modal="modal-id">
+        <div class="modal-dialog" data-parent="modal-id" aria-labelledby="header-id">
+            <header class="modal-header">
+                <h2 class="h5 has-no-m" id="header-id">
+                    Save To Server
+                </h2>
+                <a class="has-font-size-sm" data-close href="#">
+            Close
+          </a>
+            </header>
+            <section class="modal-body">
+                <label for="save-name">
+                    Graph Name
+                    <input id="save-name" type="text" value="" placeholder="My Grahp" />
+                  </label>
+                <label for="frm-save-server-address">
+                    Server Address
+                    <input onkeypress="server.setAdress(this.value)" id="server-address" type="text" value="" placeholder="http://testtextograph.digitaltoxicity.ir" />
+                  </label>
+            </section>
+            <footer class="modal-footer">
+                <a id="close-save-dlg" class="button has-no-m-block-end has-m-inline-end-sm" data-close href="#">
+            Cancel
+          </a>
+                <a id="btn-save" class="button is-primary has-no-m-block-end" onclick="server.save()">
+            OK
+          </a>
+            </footer>
+        </div>
+    </div>
+    <div id="frm-open" class="modal-overlay" data-modal="modal-open">
+        <div class="modal-dialog" data-parent="modal-open" aria-labelledby="header-02">
+            <header class="modal-header">
+                <h2 class="h5 has-no-m" id="header-02">
+                    Open Graphs from Server
+                </h2>
+                <a class="has-font-size-sm" data-close href="#">
+            Close
+          </a>
+            </header>
+            <section class="modal-body">
+                <label for="server-address">
+                    Server Address
+                    <input onkeypress="server.setAdress(this.value)" id="frm-open-server-address" type="text" value="" placeholder="http://testtextograph.digitaltoxicity.ir" />
+                  </label>
+                <div id="graph-list" class="is-xs-d-none is-md-d-flex is-xl-d-block"></div>
+                <div id="pages_links"></div>
+            </section>
+            <footer class="modal-footer">
+                <a id="close-open-dlg" class="button has-no-m-block-end has-m-inline-end-sm" data-close href="#">
+            Cancel
+          </a>
+                <a id="btn-get-list" class="button is-primary has-no-m-block-end" onclick="server.get_firstpage()">
+            Get List
+          </a>
+            </footer>
+        </div>
+    </div>
     <div class="grid is-fullscreen">
         <!-- header goes here -->
         <div id="header" class="row has-justify-content-space-between">
@@ -66,11 +123,11 @@
                 <span class="slider round"></span>
             </label>
             <div id="toolbar" class="has-gray900-bg-color">
-                <div id="web">Web</div>
-                <div id="tree">Tree</div>
-                <div id="btn2">btn2</div>
-                <div id="btn3">btn3</div>
-                <div id="btn4">btn4</div>
+                <div class="button" id="web">Web</div>
+                <div class="button" id="tree">Tree</div>
+                <div class="button" data-target="modal-id" id="Save">Save</div>
+                <div class="button" data-target="modal-open" id="save">Open</div>
+                <div class="button" id="btn4">btn4</div>
             </div>
         </div>
         <div class="row has-align-content-stretch">
@@ -391,7 +448,7 @@
         drawer.draw(data);
     </script>
     <script src="js/collapsible_tree.js"></script>
-
+    <script src="js/crud.js"></script>
 
 
 

@@ -10,7 +10,8 @@
 }
 
 #header {
-    max-height: 60px;
+    min-height: 60px;
+    flex: 0 1 auto;
 }
 
 #chart {
@@ -57,8 +58,7 @@ text {
     padding: 10px;
 }
 
-#mini-toolbar,
-#toolbar {
+#mini-toolbar {
     opacity: 90%;
     top: 0;
     position: absolute;
@@ -69,8 +69,7 @@ text {
     justify-content: space-around;
 }
 
-#mini-toolbar div,
-#toolbar div {
+#mini-toolbar div {
     opacity: 100% !important;
     background: rgb(173, 139, 88);
     width: auto;
@@ -80,6 +79,10 @@ text {
     display: block;
     font-size: x-small;
     cursor: pointer;
+}
+
+#toolbar div {
+    margin: 10px;
 }
 
 #save_area {
@@ -97,13 +100,25 @@ text {
 
 
 /* view slider for adjusting map size */
+*:focus {
+    outline: 0;
+      border-color: inherit;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+input:focus{
+    outline: none !important;
+}
 
 .range-slider {
     -webkit-appearance: none;
+    min-width: 230px;
     width: 20%;
-    height: 25px;
-    background: #d3d3d3;
-    outline: none;
+    height: 30%;
+    max-height: 10px;
+    background: lightsteelblue;
+    border-radius: 5px;
+    outline: none !important;
     opacity: 0.7;
     -webkit-transition: .2s;
     transition: opacity .2s;
@@ -115,18 +130,22 @@ text {
 
 .range-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
+    border-radius: 20px;
     appearance: none;
     width: 25px;
     height: 25px;
-    background: #4CAF50;
+    background: darkgray;
     cursor: pointer;
 }
 
 .range-slider::-moz-range-thumb {
+    border-radius: 20px;
     width: 25px;
     height: 25px;
-    background: #4CAF50;
+    background: darkgray;
+    border: none;
     cursor: pointer;
+    outline: none;
 }
 
 #quiz_choices {
@@ -138,11 +157,11 @@ text {
     top: 0;
     display: flex;
     flex-wrap: wrap;
-     align-content: flex-start;
+    align-content: flex-start;
     overflow: scroll;
 }
 
-.answer{
+.answer {
     display: inline-block;
     background-color: lightblue;
     font-size: 1.5em;
@@ -153,6 +172,7 @@ text {
     height: auto;
     cursor: pointer;
 }
+
 .switch {
     position: relative;
     display: inline-block;
@@ -213,4 +233,69 @@ input:checked+.slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+#graph-list {
+    /*     flex-wrap: wrap; */
+    max-height: 50vh;
+    /*     justify-content: stretch; */
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    /*! min-width: 120px; */
+    overflow: scroll;
+}
+
+#graph-list graph {
+    /*     max-height: 2em; */
+    /*! flex: 0 1 31%; */
+    /*! min-width: 100px; */
+    /*     width: 31%; */
+    background-color: lightgrey;
+    margin: 3px .5%;
+    padding: 1px 3px;
+    border-radius: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    display: block;
+}
+
+#frm-open .modal-dialog {
+    width: 60%;
+    margin: 40px auto;
+}
+
+graph span {
+    background-color: skyblue;
+    border-radius: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    text-align: center;
+    margin: 2px;
+    display: inline-block;
+}
+
+#pages_links{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#pages_links a{
+    display: block;
+    cursor: pointer;
+    color: black;
+    background-color: bisque;
+    border-radius: 10px;
+    padding: 0.8em;
+    margin: .5em;
+    transition:  background-color .5s;
+}
+#pages_links a:hover{
+    background-color: orange;
+
+}
+#pages_links a.active_page{
+    background-color:skyblue;
 }
