@@ -1,5 +1,10 @@
 // call on text selected
-
+var text_area = document.getElementById("text_area");
+var text_view = document.getElementById("text-view");
+var viewBoxSlider = document.getElementById("sliderViewBox");
+var radiusSlider = document.getElementById("sliderRadius");
+var show_quiz_leaves_label = document.getElementById("quiz-leaves-label");
+var show_quiz_leaves = document.getElementById("quiz-leaves");
 var t = '';
 var selected_text = '';
 
@@ -9,33 +14,34 @@ function gText(e) {
         document.selection.createRange().toString();
     t = selection
     if (selection && !show_quiz_leaves.checked) {
+        box = document.querySelector('#mini-toolbar');
         toolbar = $("#mini-toolbar");
-        X = e.clientX - (toolbar.width() / 2);
-        Y = e.clientY;
+        Y = e.clientY + 10;
         toolbar.css("top", `${Y}px`);
-        toolbar.css("left", `${X}px`);
         toolbar.css("display", 'flex');
+        a = toolbar.width()
+        X = e.clientX - (box.clientWidth / 2);
+        toolbar.css("left", `${X}px`);
+
     } else {
         toolbar = $("#mini-toolbar");
         toolbar.css("display", 'none');
     }
 }
 
-document.onmouseup = gText;
+text_view.onmouseup = gText;
 if (!document.all) document.captureEvents(Event.MOUSEUP);
 
 
 // call if textarea has been change
-
-$('#text_area').bind('change', function() {
+text_area.onchange = function() {
     $("#text-view").text(this.value)
-});
+}
 
 // if toolbar buttons clicked
 $("#mini-toolbar").on('click', 'div', function() {
     if (selected_text) {
         console.log(selected_text);
-
 
         the_id = $(this).attr("id")
         switch (the_id) {
@@ -115,10 +121,6 @@ function redraw_graph(draw = true) {
     return data;
 }
 
-var viewBoxSlider = document.getElementById("sliderViewBox");
-var radiusSlider = document.getElementById("sliderRadius");
-var show_quiz_leaves_label = document.getElementById("quiz-leaves-label");
-var show_quiz_leaves = document.getElementById("quiz-leaves");
 
 //var output = document.getElementById("demo");
 //output.innerHTML = slider.value;
