@@ -1,11 +1,16 @@
 <html>
 
 <head>
-
-    <link rel="stylesheet" href="css/undernet.min.css" />
-    <link rel="stylesheet" href="css/slider.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/undernet.min.css">
+    <link rel="stylesheet" href="css/slider.css">
+    <link rel="stylesheet" href="css/style.css">
     <!-- add other styles/css here -->
+
+    <!-- awesome fonts -->
+    <script src="libs/awsome_fonts/js/all.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="libs/awsome_fonts/css/all.min.css">
+    <!-- end awsome fonts -->
+
 </head>
 
 
@@ -102,15 +107,15 @@
 
                     <div id="text-column">
                         <!-- collapsible -->
-                        <div class="collapsible" data-collapsible="collapsible-id">
+                        <div class="collapsible" data-collapsible="collapsible-id" data-visible="false">
                             <h5>
-                                <button class="collapsible-trigger" id="collapsible-trigger-id" data-target="collapsible-id">
+                                <button class="collapsible-trigger is-ready" id="collapsible-trigger-id" data-target="collapsible-id" aria-controls="collapsible-id" aria-expanded="false">
                             Edit Text
                           </button>
                             </h5>
-                            <div class="collapsible-content" id="collapsible-id">
+                            <div class="collapsible-content is-ready" id="collapsible-id" aria-labelledby="collapsible-trigger-id" aria-hidden="true" style="">
 
-                                <textarea id="text_area" id="example-textarea" placeholder="Place Text Here:...">EPIDEMIOLOGY — Reactive arthritis is a relatively rare disease that typically occurs in young adults, affecting both men and women. Studies of the prevalence and annual incidence of reactive arthritis are highly heterogeneous with respect to the size of the cohort, collection of data, the definition of reactive arthritis, and the identification of the inducing pathogens. In a US population-based study in Oregon and Minnesota, the incidence of reactive arthritis following documented enteric bacterial infections ranged from 0.6 to 3.1 cases per 100,000, depending upon the organism [11]. An analysis of the data in a 2013 systematic review found that the incidence of reactive arthritis following infection with Campylobacter, Salmonella, and Shigella, was estimated as 9, 12, and 12 per 1,000 patients, respectively [12]. Similarly, the annual incidence of reactive arthritis among children in three pediatric health networks in the United States with Clostridium difficile infection was estimated at 14 per 1000 patients [13]. Globally, the annual incidence has been reported between 0.6 to 27 per 100,000, and the prevalence is estimated to be 30 to 40 per 100,000 adults [3,4,6,14].
+                                <textarea id="text_area" placeholder="Place Text Here:...">EPIDEMIOLOGY    — Reactive arthritis is a relatively rare disease that typically occurs in young adults, affecting both men and women. Studies of the prevalence and annual incidence of reactive arthritis are highly heterogeneous with respect to the size of the cohort, collection of data, the definition of reactive arthritis, and the identification of the inducing pathogens. In a US population-based study in Oregon and Minnesota, the incidence of reactive arthritis following documented enteric bacterial infections ranged from 0.6 to 3.1 cases per 100,000, depending upon the organism [11]. An analysis of the data in a 2013 systematic review found that the incidence of reactive arthritis following infection with Campylobacter, Salmonella, and Shigella, was estimated as 9, 12, and 12 per 1,000 patients, respectively [12]. Similarly, the annual incidence of reactive arthritis among children in three pediatric health networks in the United States with Clostridium difficile infection was estimated at 14 per 1000 patients [13]. Globally, the annual incidence has been reported between 0.6 to 27 per 100,000, and the prevalence is estimated to be 30 to 40 per 100,000 adults [3,4,6,14].
 
                                     Among patients with any of the spondyloarthritis (SpA) variants seen by rheumatologists, those with reactive arthritis are a small minority. This was illustrated by two registry-based studies from Spain in which 1.2 to 1.4 percent of all patients with SpA had been diagnosed with reactive arthritis [15,16].
                                     
@@ -135,15 +140,16 @@
         </div>
     </div>
 
-    <div id="mini-toolbar" class="has-gray900-bg-color">
-        <div id="note">note</div>
-        <div id="below">below</div>
-        <div id="child">child</div>
-        <div id="before">before</div>
-        <div id="record">record</div>
+    <div id="mini-toolbar" style="display: none; top: 241px; left: 898.45px;">
+        <div id="record"><i class="fas fa-file-medical"></i></div>
+        <div id="below"><i class="fas fa-arrow-alt-circle-down"></i></div>
+        <div id="child"><i class="fas fa-arrow-circle-right"></i></div>
+        <div id="before"><i class="fas fa-arrow-alt-circle-left"></i></div>
+        <div id="note"><i class="fas fa-comment-alt"></i></div>
     </div>
     <!-- add page content here -->
     <!-- <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script> -->
+
     <script src="js/d3.v5.min.js"></script>
     <script src="js/d3-tip.min.js"></script>
     <link rel="stylesheet" href="css/d3-tip.css">
@@ -152,7 +158,6 @@
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/undernet@8.1.0/dist/undernet.bundle.min.js" integrity="sha256-am6vAHMcM/VM5t7fA2/WTBPL4UbehfbYc4M7aLFe824=" crossorigin="anonymous"></script> -->
     <script type="text/javascript" src="js/undernet.bundle.min.js"></script>
     <script type="text/javascript" src="js/toolbar.js"></script>
-    <script src="js/graphdata.js"></script>
     <script type="text/javascript">
         // Undernet is now  attached to the `window`
         if (document)
@@ -161,6 +166,7 @@
             })
     </script>
     <script src="js/slider.js"></script>
+    <script src="js/graphdata.js"></script>
     <script type="text/javascript" src="js/chart.js"></script>
     <script id="save_area"></script>
 

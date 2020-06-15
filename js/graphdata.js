@@ -15,6 +15,7 @@ var graph_data = {
     current_depth: 0,
     auto_inc_id: 0,
     note_auto_id: 0,
+    version: 0.1,
     createNodeFromCache() {
         node = "";
         return node;
@@ -106,21 +107,33 @@ var graph_data = {
         }
         return stratify(parent, nodes) //parent is null so it returns all hierarchy including root
     },
-    setData(json) {
-        tmp_arr = destratify(json, null)
+    setData(json_graph) {
+        _nodes = new Map()
+        try {
+            // makes hierarchial jason graph to tabular form
+            tmp_arr = destratify(json_graph, null)
+
+            // saves tabular data in a temporary Map object (Dictionary)
+            tmp_arr.forEach(node => {
+                _nodes.set(node.id, node)
+            });
+        } catch (error) {
+            return false;
+        }
+
+        this.eraseData();
         delete this.current_node
-        this.eraseData()
-        tmp_arr.forEach(node => {
-            this.nodes.set(node.id, node)
-        });
+            // Store temporary generated Map        
+        this.nodes = _nodes;
+        // set root node
         root_id = Math.min(...this.nodes.keys())
         this.root_node = this.nodes.get(root_id)
         this.changeCurrentNode(root_id)
         this.auto_inc_id = Math.max(...this.nodes.keys()) + 1
-
+        return true;
     },
     getJsonStr() {
-        return JSON.stringify(this.stratify);
+        return JSON.stringify(this.stratify());
     },
     eraseData() {
         this.nodes.clear();
@@ -136,6 +149,9 @@ var graph_data = {
     },
     getActiveNode() {
         return this.current_node;
+    },
+    isCompatible(version) {
+        return (version == this.version) ? true : false;
     }
 
 }

@@ -16,11 +16,15 @@ server = {
         this.graph_name = name;
     },
     save(e) {
-        version = "0.0.1"
+        version = graph_data.version
         json = {}
         json.graph = graph_data.stratify()
-            // json.text = graph_data.get_text()
+        json.text = document.getElementById("text_area").value
         json.version = version
+        json.radial_tree_zoom = radial_tree.zoom
+        json.radial_tree_radius = radial_tree.radius
+        json.collapsibleTree_zoom = chart_tree.zoom
+        json.collapsibleTree_radius = chart_tree.radius
             // json.notes = graph_data.getNotes()
         data = {}
         data.json = json
@@ -147,10 +151,30 @@ server = {
                 alert(err.Message);
             },
             success: function(data) {
-                console.log(data)
+                // ********* better to write with try catch  ****
+                const _err = server_obj.load_graph(data.json)
+                    // console.log(data.graph.json)
+                if (_err) alert(_err)
             }
         })
+    },
+    load_graph(data) {
+        // graph_data is a global object
+        if (!graph_data.isCompatible(data.version)) return "version incompatible"
+        if (!graph_data.setData(data.graph)) return "there is a problem with your graph"
+            // if (!graph_data.setNotes(data.Notes)) return "there is a problem with your graph"
+            // adjust zooming
+        radial_tree.zoom = data.radial_tree_zoom
+        radial_tree.radius = data.radial_tree_radius
+        chart_tree.zoom = data.collapsibleTree_zoom
+        chart_tree.radius = data.collapsibleTree_radius
+        document.getElementById("text_area").value = data.text
+        $("#text-view").text(data.text)
+        graph_data.version = data.version
+        refresh_view();
+        return null
     }
+
 }
 
 function add_pagination(data, make_url_func, call_url_func, _fix) {
