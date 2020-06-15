@@ -16,11 +16,13 @@ server = {
         this.graph_name = name;
     },
     save(e) {
-        version = "0.0.1"
+        version = graph_data.version
         json = {}
         json.graph = graph_data.stratify()
             // json.text = graph_data.get_text()
         json.version = version
+        json.zoom = drawer.zoom
+        json.radius = drawer.radius
             // json.notes = graph_data.getNotes()
         data = {}
         data.json = json
@@ -147,10 +149,26 @@ server = {
                 alert(err.Message);
             },
             success: function(data) {
-                console.log(data)
+                // ********* better to write with try catch  ****
+                const _err = server_obj.load_graph(data.json)
+                    // console.log(data.graph.json)
+                if (_err) alert(_err)
             }
         })
+    },
+    load_graph(data) {
+        // graph_data is a global object
+        if (!graph_data.isCompatible(data.version)) return "version incompatible"
+        if (!graph_data.setData(data.graph)) return "there is a problem with your graph"
+            // if (!graph_data.setNotes(data.Notes)) return "there is a problem with your graph"
+            // 
+        drawer.zoom = data.zoom;
+        drawer.radius = data.radius
+        graph_data.version = data.version
+        refresh_view();
+        return null
     }
+
 }
 
 function add_pagination(data, make_url_func, call_url_func, _fix) {

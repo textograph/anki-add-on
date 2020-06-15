@@ -93,13 +93,17 @@ $("#toolbar").on('click', 'div', function() {
             break;
     }
     // there should be some code to set the zoming and radius slider based on level of corresponding drawer value
-    redraw_graph();
-    getQuiz();
+    refresh_view();
     // alert("You clicked on li " + $("#save_area").val());
     // var json = JSON.stringify([...graph_data.nodes.values()]);
     // $("#save_area").text("data = " + json + ";graph_data.setData(data)")
 
 });
+
+function refresh_view() {
+    redraw_graph();
+    getQuiz();
+}
 
 function redraw_graph(draw = true) {
     // puts new data into chart and draws the chart from scratch
@@ -115,8 +119,7 @@ var viewBoxSlider = document.getElementById("sliderViewBox");
 var radiusSlider = document.getElementById("sliderRadius");
 var show_quiz_leaves_label = document.getElementById("quiz-leaves-label");
 var show_quiz_leaves = document.getElementById("quiz-leaves");
-var save_name = document.getElementById("save-name");
-var server_address = document.getElementById("server-address");
+
 //var output = document.getElementById("demo");
 //output.innerHTML = slider.value;
 show_quiz_leaves_label.onchange = getQuiz
