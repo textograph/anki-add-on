@@ -21,8 +21,10 @@ server = {
         json.graph = graph_data.stratify()
             // json.text = graph_data.get_text()
         json.version = version
-        json.zoom = drawer.zoom
-        json.radius = drawer.radius
+        json.radial_tree_zoom = radial_tree.zoom
+        json.radial_tree_radius = radial_tree.radius
+        json.collapsibleTree_zoom = chart_tree.zoom
+        json.collapsibleTree_radius = chart_tree.radius
             // json.notes = graph_data.getNotes()
         data = {}
         data.json = json
@@ -161,9 +163,12 @@ server = {
         if (!graph_data.isCompatible(data.version)) return "version incompatible"
         if (!graph_data.setData(data.graph)) return "there is a problem with your graph"
             // if (!graph_data.setNotes(data.Notes)) return "there is a problem with your graph"
-            // 
-        drawer.zoom = data.zoom;
-        drawer.radius = data.radius
+            // adjust zooming
+        radial_tree.zoom = data.radial_tree_zoom
+        radial_tree.radius = data.radial_tree_radius
+        chart_tree.zoom = data.collapsibleTree_zoom
+        chart_tree.radius = data.collapsibleTree_radius
+
         graph_data.version = data.version
         refresh_view();
         return null
