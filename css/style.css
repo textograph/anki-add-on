@@ -259,7 +259,8 @@ input:checked+.slider:before {
     border-radius: 5px;
     cursor: pointer;
     overflow: hidden;
-    display: block;
+    display: flex;
+    justify-content: space-between;
 }
 
 #frm-open .modal-dialog {
@@ -273,15 +274,31 @@ input:checked+.slider:before {
 }
 
 graph span {
-    background-color: skyblue;
-    border-radius: 20px;
     min-width: 20px;
     min-height: 20px;
+    margin: 2px;    
+    flex: 0 0 20px;
+}
+graph span.number{
     text-align: center;
-    margin: 2px;
-    display: inline-block;
+    background-color: skyblue;
+    border-radius: 20px;
+}
+graph span.delete:hover {
+    color: red;    
+}
+span.delete svg.svg-inline--fa, span.edit-name svg.svg-inline--fa{
+    font-size: 18px !important;
 }
 
+graph span.graph_name{
+    flex: 1 0 auto;
+    text-align: left;
+    background-color: rgba(15,15,15,0);
+}
+graph span.edit-name:hover{
+    color: green;
+}
 #pages_links {
     display: flex;
     align-items: center;
@@ -308,7 +325,7 @@ graph span {
 }
 
 div svg:not(:root).svg-inline--fa {
-    font-size: 30px;
+    font-size: 25px;
 }
 
 .modal-body div.jHtmlArea {
