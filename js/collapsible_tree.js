@@ -86,7 +86,7 @@ var chart_tree = {
             tip = d3.tip().direction('e')
                 .attr('class', 'd3-tip')
                 .html(function(d) {
-                    the_note = graph_data.getNote(d.data.note_id).note
+                    the_note = graph_data.getNote(d.data.note_id)
                     node_name = d.data.name
                     var res = the_note.replace(new RegExp(`(${node_name})`), '<span id="name_word"><b>$1</b></span>');
                     return res;
