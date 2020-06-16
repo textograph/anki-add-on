@@ -8,6 +8,12 @@ var show_quiz_leaves = document.getElementById("quiz-leaves");
 var t = '';
 var selected_text = '';
 
+function ChangeDocText() {
+    $("#text-view").html($("#text_area").htmlarea('html'));
+    var event = new Event('click');
+    document.getElementById("close-edit-dlg").dispatchEvent(event);
+}
+
 function gText(e) {
     var selection = document.getSelection ?
         document.getSelection().toString() :
@@ -57,13 +63,13 @@ $("#mini-toolbar").on('click', 'div', function() {
             case "note":
                 note = graph_data.addNote(selected_text)
                 graph_data.changeCurrentNote(note.id)
+                hide_minitoolbar()
                 return;
             default:
                 break;
         }
 
-
-
+        hide_minitoolbar()
         const json = graph_data.stratify();
         var data = d3.hierarchy(json);
         drawer.draw(data);
@@ -75,6 +81,16 @@ $("#mini-toolbar").on('click', 'div', function() {
 
 });
 
+function hide_minitoolbar() {
+    try {
+        document.selection.empty()
+    } catch (error) {
+
+    }
+    window.getSelection().removeAllRanges()
+    toolbar = $("#mini-toolbar");
+    toolbar.css("display", 'none');
+}
 $("#mini-toolbar").on('mousedown', 'div', function() {
     if (t) {
         selected_text = t;

@@ -17,7 +17,8 @@
         "d3": "5",
         "jquery": "3.5.1",
         "undernet": "3.5.1",
-        "d3-tip": "https://github.com/VACLab/d3-tip"
+        "d3-tip": "https://github.com/VACLab/d3-tip",
+        "jHtmlArea": "https://github.com/crpietschmann/jHtmlArea"
     },
     "bugs": {
         "url": "https://github.com/amsaravi/textograph/issues"

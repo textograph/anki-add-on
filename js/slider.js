@@ -11,8 +11,8 @@
         var offsetX, width;
         e.preventDefault();
         dragging = true;
-        width = $(".content").width();
-        offsetX = $(".content").offset().left;
+        width = $(".slider-content").width();
+        offsetX = $(".slider-content").offset().left;
         ghost = $("<div/>", {
             class: "ghostSlider",
             css: {
@@ -20,7 +20,7 @@
             }
         }).
 
-        appendTo($(".content"));
+        appendTo($(".slider-content"));
         $(".size").text(parseInt($(".properties").width()) + "px").fadeIn("fast");
         $doc.on("mousemove", function(ev) {
             dragging = true;
