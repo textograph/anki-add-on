@@ -97,7 +97,10 @@ var graph_data = {
         return this.notes[id]
     },
     getNotes() {
-
+        return this.notes
+    },
+    setNotes(notes) {
+        this.notes = notes
     },
     getParentN() {},
     stratify(parent = null) {

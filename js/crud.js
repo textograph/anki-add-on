@@ -25,7 +25,7 @@ server = {
         json.radial_tree_radius = radial_tree.radius
         json.collapsibleTree_zoom = chart_tree.zoom
         json.collapsibleTree_radius = chart_tree.radius
-            // json.notes = graph_data.getNotes()
+        json.notes = graph_data.getNotes()
         data = {}
         data.json = json
         data.name = save_name.value
@@ -172,6 +172,7 @@ server = {
         $("#text_area").htmlarea("updateHtmlArea")
         $("#text-view").html(data.text)
         graph_data.version = data.version
+        graph_data.setNotes(data.notes)
         refresh_view();
         return null
     }
