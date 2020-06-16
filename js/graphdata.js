@@ -8,7 +8,7 @@ class GraphNode {
 
 var graph_data = {
     nodes: new Map(),
-    notes: new Map(),
+    notes: {},
     current_node: null,
     root_node: null,
     current_note: null,
@@ -16,10 +16,6 @@ var graph_data = {
     auto_inc_id: 0,
     note_auto_id: 0,
     version: 0.1,
-    createNodeFromCache() {
-        node = "";
-        return node;
-    },
 
     addChildTo(node, parent = null, data = null) {
         // adds new node to nodes repo, increases autonumber, 
@@ -30,7 +26,7 @@ var graph_data = {
         }
 
         if (data == null) {
-            data = { note_id: this.current_note.id }
+            data = { note_id: this.current_note }
         }
         if (typeof node === "string") {
 
@@ -91,13 +87,18 @@ var graph_data = {
 
     },
     addNote(txt_note) {
-        this.notes.set(this.note_auto_id, {
-            id: this.note_auto_id,
-            note: txt_note
-        })
-        return this.notes.get(this.note_auto_id++)
+        this.notes[this.note_auto_id] = txt_note
+        return this.note_auto_id++
     },
-    getNodes() {},
+    changeCurrentNote(note_id) {
+        this.current_note = note_id
+    },
+    getNote(id) {
+        return this.notes[id]
+    },
+    getNotes() {
+
+    },
     getParentN() {},
     stratify(parent = null) {
         nodes = [...this.nodes.values()]
@@ -140,12 +141,6 @@ var graph_data = {
     },
     changeCurrentNode(id) {
         this.current_node = this.nodes.get(id);
-    },
-    changeCurrentNote(note_id) {
-        this.current_note = this.notes.get(note_id)
-    },
-    getNote(id) {
-        return this.notes.get(id)
     },
     getActiveNode() {
         return this.current_node;

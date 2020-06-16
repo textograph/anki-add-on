@@ -61,8 +61,8 @@ $("#mini-toolbar").on('click', 'div', function() {
                 graph_data.addSibling(selected_text)
                 break;
             case "note":
-                note = graph_data.addNote(selected_text)
-                graph_data.changeCurrentNote(note.id)
+                const note_id = graph_data.addNote(selected_text)
+                graph_data.changeCurrentNote(note_id)
                 hide_minitoolbar()
                 return;
             default:
