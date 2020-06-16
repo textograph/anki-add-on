@@ -109,10 +109,16 @@ server = {
                 lst_div.selectAll("graph")
                     .data(data.data)
                     .join("graph")
-                    // .attr("class", "column.is-xs-12.is-lg-4")
-                    .on("click",
-                        d => server_obj.open_graph(data.path + "/" + d.id))
-                    .html(d => `<span class="number">${d.id}</span>` + d.name)
+                    .attr("id", d => "graph" + d.id)
+                    .append("span").attr("class", "number").text(d => d.id)
+                    .on("click", d => server_obj.open_graph(data.path + "/" + d.id))
+                    .clone().attr("class", "graph_name").text(d => d.name)
+                    .on("click", d => server_obj.open_graph(data.path + "/" + d.id))
+                    .clone().attr("class", "edit-name").html('<i class="fas fa-edit"></i>')
+                    .on("click", d => server_obj.edit_graph_name(data.path + "/" + d.id, `#graph${d.id}`))
+                    .clone().attr("class", "delete").html('<i class="fas fa-trash-alt"></i>')
+                    .on("click", d => server_obj.delete_graph(data.path + "/" + d.id, `#graph${d.id}`))
+
 
                 // add pagination                
                 add_pagination(
@@ -136,6 +142,25 @@ server = {
     },
     search(graph_name) {
 
+    },
+    edit_graph_name(address_path, grahp_id) {
+
+    },
+    delete_graph(url, dom_id) {
+        if (confirm("are you want to delete this graph?"))
+            $.ajax({
+                url: url,
+                type: 'delete',
+                dataType: 'json',
+                contentType: 'application/json',
+                error: function(xhr, status, error) {
+                    var err = xhr.responseText;
+                    alert(err.Message);
+                },
+                success: function(data) {
+                    d3.select(dom_id).node().remove()
+                }
+            })
     },
     open_graph(url) {
         if (!url) return
