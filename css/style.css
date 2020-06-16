@@ -46,7 +46,6 @@ text {
     flex: 1 0 auto;
     height: 400px;
     width: 100%;
-/*     margin: 2%; */
 }
 
 #text-view {
@@ -141,11 +140,10 @@ input:focus {
 }
 
 .range-slider::-moz-range-thumb {
-    background-color:bisque ;
+    background-color: bisque;
     border-radius: 20px;
     width: 25px;
     height: 25px;
-    
     border: none;
     cursor: pointer;
     outline: none;
@@ -271,7 +269,6 @@ input:checked+.slider:before {
 
 #frm-edit-text .modal-dialog {
     width: 50%;
-    justify-content: stretch;
     /*! height: 80%; */
 }
 
@@ -314,6 +311,6 @@ div svg:not(:root).svg-inline--fa {
     font-size: 30px;
 }
 
-.modal-body div.jHtmlArea{
+.modal-body div.jHtmlArea {
     width: 100% !important;
 }
