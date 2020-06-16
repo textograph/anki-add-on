@@ -108,6 +108,8 @@
             </footer>
         </div>
     </div>
+
+    <!-- ============== app panells goes here -->
     <div class="grid is-fullscreen">
         <!-- header goes here -->
         <div id="header" class="row has-justify-content-space-between">
@@ -118,12 +120,13 @@
                 <input id="quiz-leaves" type="checkbox">
                 <span class="slider round"></span>
             </label>
+            <!-- Main toolbar goes here -->
             <div id="toolbar" class="has-gray900-bg-color">
                 <div class="button" id="web">Web</div>
                 <div class="button" id="tree">Tree</div>
                 <div class="button" data-target="modal-id" id="Save">Save</div>
                 <div class="button" data-target="modal-open" id="save">Open</div>
-                <div class="button" data-target="modal-03" id="edit-text">Edit Text</div>
+                <div class="button" data-target="modal-03" id="edit-text" onclick="$('textarea').htmlarea();">Edit Text</div>
             </div>
         </div>
         <div class="row has-align-content-stretch">

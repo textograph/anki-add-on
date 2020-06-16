@@ -44,14 +44,14 @@ text {
 #text_area {
     /* max-height: 600px; */
     flex: 1 0 auto;
-    height: 96%;
-    width: 96%;
-    margin: 2%;
+    height: 400px;
+    width: 100%;
+/*     margin: 2%; */
 }
 
 #text-view {
     width: 100%;
-    height: calc(100% - 40px);
+    height: calc(98%);
     overflow-y: scroll;
     color: black;
     font-size: 10pt;
@@ -77,7 +77,7 @@ text {
     margin: 3px;
     border-radius: 2px;
     display: block;
-    font-size: 30;
+    font-size: 30 !important;
     cursor: pointer;
 }
 
@@ -118,7 +118,7 @@ input:focus {
     width: 20%;
     height: 30%;
     max-height: 10px;
-    background: lightsteelblue;
+    background: gray;
     border-radius: 5px;
     outline: none !important;
     opacity: 0.7;
@@ -136,15 +136,16 @@ input:focus {
     appearance: none;
     width: 25px;
     height: 25px;
-    background: darkgray;
+    background: bisque;
     cursor: pointer;
 }
 
 .range-slider::-moz-range-thumb {
+    background-color:bisque ;
     border-radius: 20px;
     width: 25px;
     height: 25px;
-    background: darkgray;
+    
     border: none;
     cursor: pointer;
     outline: none;
@@ -268,6 +269,12 @@ input:checked+.slider:before {
     margin: 40px auto;
 }
 
+#frm-edit-text .modal-dialog {
+    width: 50%;
+    justify-content: stretch;
+    /*! height: 80%; */
+}
+
 graph span {
     background-color: skyblue;
     border-radius: 20px;
@@ -301,4 +308,12 @@ graph span {
 
 #pages_links a.active_page {
     background-color: skyblue;
+}
+
+div svg:not(:root).svg-inline--fa {
+    font-size: 30px;
+}
+
+.modal-body div.jHtmlArea{
+    width: 100% !important;
 }
