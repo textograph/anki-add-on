@@ -309,8 +309,10 @@ graph span {
 
 div svg:not(:root).svg-inline--fa {
     font-size: 30px;
+    <<<<<<< HEAD
 }
 
 .modal-body div.jHtmlArea {
     width: 100% !important;
+    =======>>>>>>>b733493... some styel changes
 }
