@@ -7,6 +7,9 @@ var show_quiz_leaves_label = document.getElementById("quiz-leaves-label");
 var show_quiz_leaves = document.getElementById("quiz-leaves");
 var t = '';
 var curr_selected_text = '';
+var auto_repeat = false
+var repeat_action = null
+arr_cummulated_text = []
 
 function ChangeDocText() {
     $("#text-view").html($("#text_area").htmlarea('html'));
@@ -20,6 +23,13 @@ function gText(e) {
         document.selection.createRange().toString();
     t = selection
     if (selection && !show_quiz_leaves.checked) {
+        if (repeat_action) {
+            repeat_action(t)
+            deselectAllTexts()
+            redraw_graph()
+            curr_selected_text = ""
+            t = ""
+        }
         showMiniToolbar(e);
     } else {
         hide_minitoolbar();
@@ -42,6 +52,10 @@ function showMiniToolbar(e) {
         set_clss("note", "blink")
     else
         set_clss("note", "")
+
+    set_clss("auto-repeat", auto_repeat ? "blink" : "")
+
+
 }
 
 
@@ -67,52 +81,43 @@ text_area.onchange = function() {
 
 // if toolbar buttons clicked
 $("#mini-toolbar").on('click', 'div', function() {
-    if (curr_selected_text) {
+    if (curr_selected_text || auto_repeat) {
         console.log(curr_selected_text);
-
         the_id = $(this).attr("id")
-        switch (the_id) {
-            case "child":
-                graph_data.addChild(curr_selected_text)
-                break;
-            case "before":
-                graph_data.addUncle(curr_selected_text)
-                break;
-            case "below":
-                graph_data.addSibling(curr_selected_text)
-                break;
-            case "note":
-                const note_id = graph_data.addNote(curr_selected_text)
-                graph_data.changeCurrentNote(note_id)
-                hide_minitoolbar()
-                return;
-            case "add-note":
-                return
-            case "auto-repeat":
-                return
-            default:
-                break;
+        if (the_id == "auto-repeat") {
+            auto_repeat = auto_repeat ? false : true;
+            set_clss("auto-repeat", auto_repeat ? "blink" : "")
+            repeat_action = null
+            return;
         }
-
+        action_funcs = {
+            "child": (d) => { graph_data.addChild(d) },
+            "before": (d) => { graph_data.addUncle(d) },
+            "below": (d) => { graph_data.addSibling(d) },
+            "add-text": (d) => { arr_cummulated_text.push(d) },
+            "note": (d) => {
+                const note_id = graph_data.addNote(d)
+                graph_data.changeCurrentNote(note_id)
+                return true;
+            }
+        }
+        repeat_action = action_funcs[the_id]
         hide_minitoolbar()
-        const json = graph_data.stratify();
-        var data = d3.hierarchy(json);
-        drawer.draw(data);
-        //save current json into the document
-        json_str = JSON.stringify(json)
-        $("#save_area").text(`json_data=${json_str}; graph_data.setData(json_data);`)
-            // alert("You clicked on li " + $(this).text());
+
+        if (curr_selected_text !== "")
+            if (!repeat_action(curr_selected_text)) {
+                redraw_graph()
+                    // save_to_document()
+                    // $("#save_area").text(`json_data=${json_str}; graph_data.setData(json_data);`)
+            }
+        if (!auto_repeat) repeat_action = null;
+        // alert("You clicked on li " + $(this).text());
     }
 
 });
 
 function hide_minitoolbar() {
-    try {
-        document.selection.empty()
-    } catch (error) {
-
-    }
-    window.getSelection().removeAllRanges()
+    deselectAllTexts();
     toolbar = $("#mini-toolbar");
     toolbar.css("display", 'none');
 }
@@ -146,6 +151,13 @@ $("#toolbar").on('click', 'div', function() {
     // $("#save_area").text("data = " + json + ";graph_data.setData(data)")
 
 });
+
+function deselectAllTexts() {
+    try {
+        document.selection.empty();
+    } catch (error) {}
+    window.getSelection().removeAllRanges();
+}
 
 function refresh_view() {
     redraw_graph();
