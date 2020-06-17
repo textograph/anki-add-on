@@ -95,6 +95,9 @@ var graph_data = {
     changeCurrentNote(note_id) {
         this.current_note = note_id
     },
+    getCurrentNote() {
+        return this.notes[this.current_note]
+    },
     getNote(id) {
         return this.notes[id]
     },
@@ -104,7 +107,6 @@ var graph_data = {
     setNotes(notes) {
         this.notes = notes
     },
-    getParentN() {},
     stratify(parent = null) {
         nodes = [...this.nodes.values()]
         if (parent == null) {

@@ -5,6 +5,7 @@ var div_graph_list = document.getElementById("graph-list");
 server = {
     address: "http://testtextograph.digitaltoxicity.ir",
     graph_name: "",
+    search_term: "",
     setAdress(address) {
         // we can validate entered address here, may be in future
         if (address.trim() == "")

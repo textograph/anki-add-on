@@ -266,12 +266,11 @@ input:checked+.slider:before {
 #frm-open .modal-dialog {
     width: 60%;
     margin: 40px auto;
-    
 }
 
 #frm-edit-text .modal-dialog {
     width: 50%;
-/*     height: 80%; */
+    /*     height: 80%; */
 }
 
 graph span {
@@ -345,4 +344,17 @@ div svg:not(:root).svg-inline--fa {
 
 #search-graph input {
     width: 49%;
+}
+
+.blink {
+    animation: blinker 1.2s linear infinite;
+    color: red;
+}
+
+@keyframes blinker {
+    0%{     color: red;    }
+    49%{    color: red; }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: red;    }
 }

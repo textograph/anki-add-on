@@ -6,7 +6,7 @@ var radiusSlider = document.getElementById("sliderRadius");
 var show_quiz_leaves_label = document.getElementById("quiz-leaves-label");
 var show_quiz_leaves = document.getElementById("quiz-leaves");
 var t = '';
-var selected_text = '';
+var curr_selected_text = '';
 
 function ChangeDocText() {
     $("#text-view").html($("#text_area").htmlarea('html'));
@@ -20,19 +20,33 @@ function gText(e) {
         document.selection.createRange().toString();
     t = selection
     if (selection && !show_quiz_leaves.checked) {
-        box = document.querySelector('#mini-toolbar');
-        toolbar = $("#mini-toolbar");
-        Y = e.clientY + 10;
-        toolbar.css("top", `${Y}px`);
-        toolbar.css("display", 'flex');
-        a = toolbar.width()
-        X = e.clientX - (box.clientWidth / 2);
-        toolbar.css("left", `${X}px`);
-
+        showMiniToolbar(e);
     } else {
-        toolbar = $("#mini-toolbar");
-        toolbar.css("display", 'none');
+        hide_minitoolbar();
     }
+}
+
+function showMiniToolbar(e) {
+    box = document.querySelector('#mini-toolbar');
+    toolbar = $("#mini-toolbar");
+    Y = e.clientY + 10;
+    toolbar.css("top", `${Y}px`);
+    toolbar.css("display", 'flex');
+    a = toolbar.width();
+    X = e.clientX - (box.clientWidth / 2);
+    toolbar.css("left", `${X}px`);
+    regex_selected_text = new RegExp(t, 'i')
+    cur_note = graph_data.getCurrentNote();
+    // blink comment if there is indication
+    if (!cur_note || cur_note.search(regex_selected_text) < 0)
+        set_clss("note", "blink")
+    else
+        set_clss("note", "")
+}
+
+
+function set_clss(item_id, class_name) {
+    $(`#${item_id}`).attr("class", class_name)
 }
 
 function onSaveAsDialog() {
@@ -53,25 +67,29 @@ text_area.onchange = function() {
 
 // if toolbar buttons clicked
 $("#mini-toolbar").on('click', 'div', function() {
-    if (selected_text) {
-        console.log(selected_text);
+    if (curr_selected_text) {
+        console.log(curr_selected_text);
 
         the_id = $(this).attr("id")
         switch (the_id) {
             case "child":
-                graph_data.addChild(selected_text)
+                graph_data.addChild(curr_selected_text)
                 break;
             case "before":
-                graph_data.addUncle(selected_text)
+                graph_data.addUncle(curr_selected_text)
                 break;
             case "below":
-                graph_data.addSibling(selected_text)
+                graph_data.addSibling(curr_selected_text)
                 break;
             case "note":
-                const note_id = graph_data.addNote(selected_text)
+                const note_id = graph_data.addNote(curr_selected_text)
                 graph_data.changeCurrentNote(note_id)
                 hide_minitoolbar()
                 return;
+            case "add-note":
+                return
+            case "auto-repeat":
+                return
             default:
                 break;
         }
@@ -100,7 +118,7 @@ function hide_minitoolbar() {
 }
 $("#mini-toolbar").on('mousedown', 'div', function() {
     if (t) {
-        selected_text = t;
+        curr_selected_text = t;
     }
 
 });
