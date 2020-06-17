@@ -15,31 +15,33 @@ server = {
     setSearchTerm(name) {
         this.graph_name = name;
     },
-    save(e) {
-        version = graph_data.version
+    save() {
+        this.saveAs(graph_data.id, graph_data.name, graph_data.url)
+    },
+    saveAs(id = null, name = null, url = null) {
         json = {}
-        json.graph = graph_data.stratify()
-        json.text = $("#text_area").htmlarea('html')
-        json.version = version
-        json.radial_tree_zoom = radial_tree.zoom
-        json.radial_tree_radius = radial_tree.radius
-        json.collapsibleTree_zoom = chart_tree.zoom
-        json.collapsibleTree_radius = chart_tree.radius
-        json.notes = graph_data.getNotes()
-        data = {}
-        data.json = json
-        data.name = save_name.value
-            // check for duplicate name
-            // console.log(confirm("Press a button!"))
+        property = {}
+        property.text = $("#text_area").htmlarea('html')
+        property.version = graph_data.version
+        property.radial_tree_zoom = radial_tree.zoom
+        property.radial_tree_radius = radial_tree.radius
+        property.collapsibleTree_zoom = chart_tree.zoom
+        property.collapsibleTree_radius = chart_tree.radius
+        property.notes = graph_data.getNotes()
+        json.json = graph_data.stratify()
+        json.property = property
+        json.name = (name) ? name : document.getElementById("save-name").value;
+        // *************  check for duplicate name
+        if (id !== null) json.id = id
         $.ajax({
-            url: this.create_path(this.address),
-            type: 'post',
+            url: (url) ? url : this.create_path(this.address),
+            type: (id) ? 'put' : 'post',
             dataType: 'json',
             contentType: 'application/json',
             success: function(data) {
                 alert("data saved")
             },
-            data: JSON.stringify(data)
+            data: JSON.stringify(json)
         });
         var event = new Event('click');
         document.getElementById("close-save-dlg").dispatchEvent(event);
@@ -177,7 +179,10 @@ server = {
             },
             success: function(data) {
                 // ********* better to write with try catch  ****
-                const _err = server_obj.load_graph(data.json)
+                const _err = server_obj.load_graph(data)
+                graph_data.name = data.name
+                graph_data.url = url
+                graph_data.id = data.id
                     // console.log(data.graph.json)
                 if (_err) alert(_err)
             }
@@ -185,19 +190,20 @@ server = {
     },
     load_graph(data) {
         // graph_data is a global object
-        if (!graph_data.isCompatible(data.version)) return "version incompatible"
-        if (!graph_data.setData(data.graph)) return "there is a problem with your graph"
+        // graph is store in data.json other things in data.property
+        if (!graph_data.isCompatible(data.property.version)) return "version incompatible"
+        if (!graph_data.setData(data.json)) return "there is a problem with your graph"
             // if (!graph_data.setNotes(data.Notes)) return "there is a problem with your graph"
-            // adjust zooming
-        radial_tree.zoom = data.radial_tree_zoom
-        radial_tree.radius = data.radial_tree_radius
-        chart_tree.zoom = data.collapsibleTree_zoom
-        chart_tree.radius = data.collapsibleTree_radius
-        document.getElementById("text_area").value = data.text
+            // adjust zooming         
+        radial_tree.zoom = data.property.radial_tree_zoom
+        radial_tree.radius = data.property.radial_tree_radius
+        chart_tree.zoom = data.property.collapsibleTree_zoom
+        chart_tree.radius = data.property.collapsibleTree_radius
+        document.getElementById("text_area").value = data.property.text
         $("#text_area").htmlarea("updateHtmlArea")
-        $("#text-view").html(data.text)
-        graph_data.version = data.version
-        graph_data.setNotes(data.notes)
+        $("#text-view").html(data.property.text)
+        graph_data.version = data.property.version
+        graph_data.setNotes(data.property.notes)
         refresh_view();
         return null
     }

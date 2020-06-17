@@ -13,7 +13,7 @@ fork
 :chose a graph from list;
 :Get corresponding json from server;
 :check fo version compatibility;
-:Set graphdata;
+:Set graphdata including graph id and name;
 :refresh tree;
 fork again
 :cancelled;

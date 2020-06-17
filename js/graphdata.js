@@ -16,7 +16,9 @@ var graph_data = {
     auto_inc_id: 0,
     note_auto_id: 0,
     version: 0.1,
-
+    name: null,
+    id: null,
+    url: null,
     addChildTo(node, parent = null, data = null) {
         // adds new node to nodes repo, increases autonumber, 
         //  and makes currnt_node pointer to point to the newly created node

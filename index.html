@@ -70,7 +70,7 @@
                 <a id="close-save-dlg" class="button has-no-m-block-end has-m-inline-end-sm" data-close href="#">
             Cancel
           </a>
-                <a id="btn-save" class="button is-primary has-no-m-block-end" onclick="server.save()">
+                <a id="btn-save" class="button is-primary has-no-m-block-end" onclick="server.saveAs()">
             OK
           </a>
             </footer>
@@ -90,7 +90,7 @@
             <section class="modal-body">
                 <label for="server-address">
                     Server Address
-                    <input onkeypress="server.setAdress(this.value)" id="frm-open-server-address" type="text" value="" placeholder="http://testtextograph.digitaltoxicity.ir" />
+                    <input onkeyup="server.setAdress(this.value.trim())" id="frm-open-server-address" type="text" value="" placeholder="http://testtextograph.digitaltoxicity.ir" />
                   </label>
                 <label>              
                     <input onkeyup="server.setSearchTerm(this.value);server.get_firstpage()" id="frm-open-search" type="text" value="" placeholder="enter Graph name to search for" />
@@ -124,8 +124,9 @@
             <div id="toolbar" class="has-gray900-bg-color">
                 <div class="button" id="web">Web</div>
                 <div class="button" id="tree">Tree</div>
-                <div class="button" data-target="modal-id" id="Save">Save</div>
-                <div class="button" data-target="modal-open" id="save">Open</div>
+                <div class="button" id="Save" onclick="server.save()">Save</div>
+                <div class="button" data-target="modal-id" id="Save-as" onclick="onSaveAsDialog()">Save As</div>
+                <div class="button" data-target="modal-open" id="open-graph" onclick="onOpenDialog()">Open</div>
                 <div class="button" data-target="modal-03" id="edit-text" onclick="$('textarea').htmlarea();">Edit Text</div>
             </div>
         </div>

@@ -35,6 +35,13 @@ function gText(e) {
     }
 }
 
+function onSaveAsDialog() {
+
+}
+
+function onOpenDialog() {
+
+}
 text_view.onmouseup = gText;
 if (!document.all) document.captureEvents(Event.MOUSEUP);
 
