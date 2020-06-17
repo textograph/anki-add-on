@@ -103,10 +103,15 @@ $("#mini-toolbar").on('click', 'div', function() {
         }
         repeat_action = action_funcs[the_id]
         hide_minitoolbar()
-
+        if (arr_cummulated_text.length > 0) {
+            curr_selected_text = arr_cummulated_text.join(" ")
+            delete arr_cummulated_text;
+            arr_cummulated_text = []
+        }
         if (curr_selected_text !== "")
             if (!repeat_action(curr_selected_text)) {
                 redraw_graph()
+                curr_selected_text = ""
                     // save_to_document()
                     // $("#save_area").text(`json_data=${json_str}; graph_data.setData(json_data);`)
             }
