@@ -31,10 +31,10 @@ body {
 
 .slider-content {
     position: absolute;
-    /*! left: 4%; */
-    /*! right: 4%; */
-    top: 4%;
-    bottom: 4%;
+    left: .5%;
+    right: .5%;
+    top: 1%;
+    bottom: 2%;
     background-color: rgba(255, 255, 255, 0.4);
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
