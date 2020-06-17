@@ -240,7 +240,7 @@ input:checked+.slider:before {
     /*     flex-wrap: wrap; */
     max-height: 50vh;
     /*     justify-content: stretch; */
-    height: 400px;
+    height: 300px;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -266,39 +266,46 @@ input:checked+.slider:before {
 #frm-open .modal-dialog {
     width: 60%;
     margin: 40px auto;
+    
 }
 
 #frm-edit-text .modal-dialog {
     width: 50%;
-    /*! height: 80%; */
+/*     height: 80%; */
 }
 
 graph span {
     min-width: 20px;
     min-height: 20px;
-    margin: 2px;    
+    margin: 2px;
     flex: 0 0 20px;
 }
-graph span.number{
+
+graph span.number {
     text-align: center;
     background-color: skyblue;
     border-radius: 20px;
 }
+
 graph span.delete:hover {
-    color: red;    
+    color: red;
 }
-span.delete svg.svg-inline--fa, span.edit-name svg.svg-inline--fa{
+
+span.delete svg.svg-inline--fa,
+span.edit-name svg.svg-inline--fa {
     font-size: 18px !important;
 }
 
-graph span.graph_name{
+graph span.graph_name {
     flex: 1 0 auto;
     text-align: left;
-    background-color: rgba(15,15,15,0);
+    background-color: rgba(15, 15, 15, 0);
 }
-graph span.edit-name:hover{
+
+graph span.edit-name:hover {
     color: green;
 }
+
 #pages_links {
     display: flex;
     align-items: center;
@@ -330,4 +337,12 @@ div svg:not(:root).svg-inline--fa {
 
 .modal-body div.jHtmlArea {
     width: 100% !important;
+}
+
+#search-graph {
+    flex-direction: row;
+}
+
+#search-graph input {
+    width: 49%;
 }

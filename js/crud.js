@@ -12,8 +12,11 @@ server = {
         else
             this.address = address
     },
-    setSearchTerm(name) {
+    setGraphName(name) {
         this.graph_name = name;
+    },
+    setSearchTerm(search_term) {
+        this.search_term = search_term;
     },
     save() {
         this.saveAs(graph_data.id, graph_data.name, graph_data.url)
@@ -63,7 +66,11 @@ server = {
 
     },
     get_firstpage() {
-        const url = this.make_url_from_scratch(this.address, { per_page: 3, name: this.graph_name })
+        const url = this.make_url_from_scratch(this.address, {
+            per_page: 3,
+            name: this.graph_name,
+            search: this.search_term
+        })
         this.saved_url = null
         this.fetch_page_by_url(url)
     },
@@ -129,20 +136,18 @@ server = {
                         d.path, {
                             per_page: d.per_page,
                             page: page_no,
-                            name: server_obj.graph_name
+                            name: server_obj.graph_name,
+                            search: server_obj.search_term
                         }),
                     d => server_obj.fetch_page_by_url(d),
                     _fix = function(url) {
                         if (url)
-                            return url + `&per_page=${data.per_page}&name=${server_obj.graph_name}`;
+                            return url + `&per_page=${data.per_page}&name=${server_obj.graph_name}&search=${ server_obj.search_term}`;
                     }
                 );
                 server_obj.busy = false;
             }
         });
-
-    },
-    search(graph_name) {
 
     },
     edit_graph_name(address_path, grahp_id) {

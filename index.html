@@ -92,8 +92,9 @@
                     Server Address
                     <input onkeyup="server.setAdress(this.value.trim())" id="frm-open-server-address" type="text" value="" placeholder="http://testtextograph.digitaltoxicity.ir" />
                   </label>
-                <label>              
-                    <input onkeyup="server.setSearchTerm(this.value);server.get_firstpage()" id="frm-open-search" type="text" value="" placeholder="enter Graph name to search for" />
+                <label id="search-graph">              
+                    <input onkeyup="server.setGraphName(this.value);server.get_firstpage()" id="txt-open-graphname" type="text"  placeholder="enter graph name" />
+                    <input onkeyup="server.setSearchTerm(this.value);server.get_firstpage()" id="txt-open-search" type="text"  placeholder="enter a search term" />
                   </label>
                 <div id="graph-list" class="is-xs-d-none is-md-d-flex is-xl-d-block"></div>
                 <div id="pages_links"></div>
