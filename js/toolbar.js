@@ -10,6 +10,27 @@ var curr_selected_text = '';
 var auto_repeat = false
 var repeat_action = null
 arr_cummulated_text = []
+action_funcs = {
+    "child": (d) => { graph_data.addChild(d) },
+    "before": (d) => { graph_data.addUncle(d) },
+    "below": (d) => { graph_data.addSibling(d) },
+    "add-text": (d) => { arr_cummulated_text.push(d) },
+    "note": (d) => {
+        const note_id = graph_data.addNote(d)
+        graph_data.changeCurrentNote(note_id)
+        return true;
+    }
+}
+
+$(document).keyup(function(e) {
+    if (e.keyCode === 27) {
+        auto_repeat = false;
+        set_clss("auto-repeat", "")
+        set_clss(repeat_action, "") //turn off prev
+        repeat_action = null
+        return;
+    }
+});
 
 function ChangeDocText() {
     $("#text-view").html($("#text_area").htmlarea('html'));
@@ -24,9 +45,9 @@ function gText(e) {
     t = selection
     if (selection && !show_quiz_leaves.checked) {
         if (repeat_action) {
-            repeat_action(t)
+            if (!action_funcs[repeat_action](t))
+                redraw_graph();
             deselectAllTexts()
-            redraw_graph()
             curr_selected_text = ""
             t = ""
         }
@@ -54,8 +75,6 @@ function showMiniToolbar(e) {
         set_clss("note", "")
 
     set_clss("auto-repeat", auto_repeat ? "blink" : "")
-
-
 }
 
 
@@ -84,24 +103,14 @@ $("#mini-toolbar").on('click', 'div', function() {
     if (curr_selected_text || auto_repeat) {
         console.log(curr_selected_text);
         the_id = $(this).attr("id")
-        if (the_id == "auto-repeat") {
+        if (the_id == "auto-repeat" || the_id == repeat_action) {
             auto_repeat = auto_repeat ? false : true;
             set_clss("auto-repeat", auto_repeat ? "blink" : "")
+            set_clss(repeat_action, "") //turn off prev
             repeat_action = null
+            if (!auto_repeat) hide_minitoolbar(); //we just hase been turned it off
             return;
         }
-        action_funcs = {
-            "child": (d) => { graph_data.addChild(d) },
-            "before": (d) => { graph_data.addUncle(d) },
-            "below": (d) => { graph_data.addSibling(d) },
-            "add-text": (d) => { arr_cummulated_text.push(d) },
-            "note": (d) => {
-                const note_id = graph_data.addNote(d)
-                graph_data.changeCurrentNote(note_id)
-                return true;
-            }
-        }
-        repeat_action = action_funcs[the_id]
         hide_minitoolbar()
         if (arr_cummulated_text.length > 0) {
             curr_selected_text = arr_cummulated_text.join(" ")
@@ -109,14 +118,20 @@ $("#mini-toolbar").on('click', 'div', function() {
             arr_cummulated_text = []
         }
         if (curr_selected_text !== "")
-            if (!repeat_action(curr_selected_text)) {
+            if (!action_funcs[the_id](curr_selected_text)) {
                 redraw_graph()
                 curr_selected_text = ""
                     // save_to_document()
                     // $("#save_area").text(`json_data=${json_str}; graph_data.setData(json_data);`)
             }
-        if (!auto_repeat) repeat_action = null;
-        // alert("You clicked on li " + $(this).text());
+        if (auto_repeat)
+            if (repeat_action != "add-text") {
+                set_clss(repeat_action, "") //turn off prev
+                set_clss(the_id, "green-color") //turn on current
+                repeat_action = the_id;
+
+            }
+            // alert("You clicked on li " + $(this).text());
     }
 
 });
@@ -171,12 +186,14 @@ function refresh_view() {
 
 function redraw_graph(draw = true) {
     // puts new data into chart and draws the chart from scratch
-    viewBoxSlider.value = drawer.zoom
-    radiusSlider.value = drawer.radius
-    json = graph_data.stratify();
-    let data = d3.hierarchy(json);
-    if (draw) drawer.draw(data);
-    return data;
+    if (graph_data.nodes.size) {
+        viewBoxSlider.value = drawer.zoom
+        radiusSlider.value = drawer.radius
+        json = graph_data.stratify();
+        let data = d3.hierarchy(json);
+        if (draw) drawer.draw(data);
+        return data;
+    }
 }
 
 
@@ -221,12 +238,17 @@ function getQuiz() {
             .text(d => d.data.name)
             .on("click", function(d, i) {
                 if (d.parent.data.id == graph_data.getActiveNode().id) {
-
-                    if (d.parent.children == null) {
-                        d.parent.children = new Array
+                    parent_childs = d.parent.children
+                    if (parent_childs == null) {
+                        if (d.parent._children == null) {
+                            d.parent.children = new Array
+                            parent_childs = d.parent.children
+                        } else {
+                            parent_childs = d.parent._children
+                        }
                     }
-                    d.parent.children.push(d)
-                    d.parent._children = d.parent.children
+                    parent_childs.push(d)
+                    d.parent._children = parent_childs
                     d3.select(this).node().remove()
                     drawer.refresh();
                 } else {

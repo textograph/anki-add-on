@@ -358,3 +358,7 @@ div svg:not(:root).svg-inline--fa {
     99%{    color:transparent;  }
     100%{   color: red;    }
 }
+
+.green-color{
+    color: green;
+}
