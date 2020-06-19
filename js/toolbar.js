@@ -97,6 +97,23 @@ if (!document.all) document.captureEvents(Event.MOUSEUP);
 text_area.onchange = function() {
     $("#text-view").text(this.value)
 }
+document.addEventListener("mousedown", function() {
+    console.log("click")
+})
+document.addEventListener("contextmenu", function(e) {
+    console.log(e);
+});
+
+function showCanvasToolbar(e) {
+    const toolbar = $("#canvas-toolbar");
+    toolbar.css("display", 'block');
+    teed = d3.scale.linear()(e[0])
+    const Y = e.clientY - (toolbar.height / 2);
+    const X = e.clientX - toolbar.width - 10;
+    toolbar.css("left", `${X}px`);
+    toolbar.css("top", `${Y}px`);
+    console.log("showMiniToolbar")
+}
 
 // if toolbar buttons clicked
 $("#mini-toolbar").on('click', 'div', function() {

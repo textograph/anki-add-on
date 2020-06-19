@@ -107,6 +107,7 @@ var radial_tree = {
             .on('mouseout', function(d) { tip.hide(d); })
 
         g.selectAll("text").on("click", function(d) {
+            // make previously selected node as black (unselected)
             if (drawer.curr_selection != null) {
                 drawer.curr_selection.attr('class', 'black_text')
             }
@@ -117,7 +118,8 @@ var radial_tree = {
             test = `#${the_id}`
             drawer.curr_selection = txt
             drawer.curr_hierarchy_node = d
-            console.log("hello " + d.data.name);
+            var coords = d3.mouse(this);
+            showCanvasToolbar(coords)
         })
 
 
