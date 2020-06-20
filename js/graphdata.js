@@ -19,6 +19,22 @@ var graph_data = {
     name: null,
     id: null,
     url: null,
+    clipboard: null,
+    deleteCurrentNode() {
+        nodes = [...this.nodes.values()]
+        this.deleteNode(this.current_node, nodes)
+    },
+
+    deleteNode(parent, nodes) {
+        nodes.forEach((node, index) => {
+            if (node.parent == parent) {
+                delete nodes[index]
+                this.deleteNode(node, nodes)
+            }
+        });
+        this.nodes.delete(parent.id)
+    },
+
     addChildTo(node, parent = null, data = null) {
         // adds new node to nodes repo, increases autonumber, 
         //  and makes currnt_node pointer to point to the newly created node
@@ -63,7 +79,6 @@ var graph_data = {
             // there is no node in our repo so create first one
             throw "Error: there is no active node, however nodes' repo is not empty"
         }
-
     },
 
     addSibling(node) { // adds a child to the parent of current node
@@ -174,6 +189,8 @@ function stratify(parent, nodes) {
     });
     return new_node
 }
+
+
 
 function destratify(node, parent = null) {
     let child_arr = []

@@ -20,8 +20,9 @@ action_funcs = {
         graph_data.changeCurrentNote(note_id)
         return true;
     },
-    "delete_node": () => {
-
+    "delete-node": () => {
+        graph_data.deleteCurrentNode()
+        refresh_view()
     }
 }
 
@@ -103,9 +104,6 @@ text_area.onchange = function() {
 document.addEventListener("mousedown", function() {
     console.log("click")
 })
-document.addEventListener("contextmenu", function(e) {
-    console.log(e);
-});
 
 function showCanvasToolbar(node) {
     e = d3.event;
@@ -127,7 +125,6 @@ function hideCanvasToolbar(node) {
 $("#canvas-toolbar").on('click', 'div', function() {
     the_id = $(this).attr("id")
     action_funcs[the_id]()
-
 })
 
 $("#mini-toolbar").on('click', 'div', function() {
