@@ -106,31 +106,40 @@ var radial_tree = {
             .on("mouseover", function(d) { tip.show(d); })
             .on('mouseout', function(d) { tip.hide(d); })
 
-        g.selectAll("text").on("click", function(d) {
+        function selectNode(d, _this = null) {
             // make previously selected node as black (unselected)
+            if (_this == null) _this = this
             if (drawer.curr_selection != null) {
                 drawer.curr_selection.attr('class', 'black_text')
             }
-            txt = d3.select(this)
+            txt = d3.select(_this)
             txt.attr('class', "red_text")
             the_id = d.data.id
             graph_data.changeCurrentNode(the_id)
             test = `#${the_id}`
             drawer.curr_selection = txt
             drawer.curr_hierarchy_node = d
-            var coords = d3.mouse(this);
-            showCanvasToolbar(coords)
-        })
+        }
+
+        g.selectAll("text").on("click", function(d) { selectNode(d, this) })
+            .on('contextmenu', function(d) {
+                d3.event.preventDefault();
+                selectNode(d, this);
+                showCanvasToolbar(this)
+            })
 
 
 
         svg.attr("viewBox", [-300, -300, 600, 600])
+        'body'
+        d3.select('body').on("click", () => hideCanvasToolbar(this))
         the_g = g.node()
             // d3.zoomTransform(the_g, this.transform_attr)
         svg.call(d3.zoom().transform, this.transform_attr);
         g.attr("transform", this.transform_attr.toString())
             // d3.zoom().transform(the_g, this.transform_attr.x, this.transform_attr.y)
     }
+
 }
 curr_selection = $('#id_1')
 

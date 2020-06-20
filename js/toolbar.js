@@ -19,6 +19,9 @@ action_funcs = {
         const note_id = graph_data.addNote(d)
         graph_data.changeCurrentNote(note_id)
         return true;
+    },
+    "delete_node": () => {
+
     }
 }
 
@@ -104,18 +107,29 @@ document.addEventListener("contextmenu", function(e) {
     console.log(e);
 });
 
-function showCanvasToolbar(e) {
+function showCanvasToolbar(node) {
+    e = d3.event;
     const toolbar = $("#canvas-toolbar");
     toolbar.css("display", 'block');
-    teed = d3.scale.linear()(e[0])
-    const Y = e.clientY - (toolbar.height / 2);
-    const X = e.clientX - toolbar.width - 10;
+    const Y = e.clientY - (toolbar.height() / 2);
+    const X = e.clientX - toolbar.width() - 10;
     toolbar.css("left", `${X}px`);
     toolbar.css("top", `${Y}px`);
-    console.log("showMiniToolbar")
+    console.log(e.clientY, e.clientX)
 }
 
+function hideCanvasToolbar(node) {
+    console.log("hiding")
+    toolbar = $("#canvas-toolbar");
+    toolbar.css("display", 'none');
+}
 // if toolbar buttons clicked
+$("#canvas-toolbar").on('click', 'div', function() {
+    the_id = $(this).attr("id")
+    action_funcs[the_id]()
+
+})
+
 $("#mini-toolbar").on('click', 'div', function() {
     if (curr_selected_text || auto_repeat) {
         console.log(curr_selected_text);

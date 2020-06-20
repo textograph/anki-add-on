@@ -173,6 +173,7 @@ var chart_tree = {
                 test = `#${the_id}`
                 drawer.curr_selection = txt
                 drawer.curr_hierarchy_node = d
+                showCanvasToolbar(this)
                 console.log("hello " + d.data.name);
             })
             svg.call(d3.zoom().transform, this.transform_attr);

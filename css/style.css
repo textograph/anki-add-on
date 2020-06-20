@@ -83,9 +83,13 @@ text {
     height: auto;
 }
 #canvas-toolbar div{
+    opacity: .8 !important;
     margin: 10px 5px;
 }
 
+#canvas-toolbar div:hover{
+    opacity: 1 !important;
+}
 #toolbar div {
     margin: 10px;
 }
