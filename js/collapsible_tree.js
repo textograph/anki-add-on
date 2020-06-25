@@ -13,7 +13,7 @@ var chart_tree = {
     curr_selection: null,
     refresh() {
         this.tree = d3.tree().nodeSize([this.dx, this.dy * this.radius])
-        this.update(this.data);
+        this.update(this.data, false);
     },
     changeZoom(zoom) {
         this.zoom = zoom
@@ -57,7 +57,7 @@ var chart_tree = {
             .attr("cursor", "pointer")
             .attr("pointer-events", "all");
 
-        this.update = function(source) {
+        this.update = function(source, show_transition = true) {
             const duration = d3.event && d3.event.altKey ? 2500 : 250;
             const nodes = root.descendants().reverse();
             const links = root.links();
@@ -95,9 +95,9 @@ var chart_tree = {
 
             // Enter any new nodes at the parent's previous position.
             const nodeEnter = node.enter().append("g")
-                .attr("transform", d => `translate(${source.y0},${source.x0})`)
-                .attr("fill-opacity", 0)
-                .attr("stroke-opacity", 0)
+                .attr("transform", d => show_transition ? `translate(${source.y0},${source.x0})` : `translate(${d.y},${d.x})`)
+                .attr("fill-opacity", show_transition ? 0 : 1)
+                .attr("stroke-opacity", show_transition ? 0 : 1)
                 .on("mouseover", function(d) { tip.show(d); })
                 .on('mouseout', function(d) { tip.hide(d); })
                 .on("click", d => {
@@ -122,16 +122,17 @@ var chart_tree = {
                 .attr("stroke", "white");
 
             // Transition nodes to their new position.
-            const nodeUpdate = node.merge(nodeEnter).transition(transition)
+            node.merge(nodeEnter).transition(transition)
                 .attr("transform", d => `translate(${d.y},${d.x})`)
                 .attr("fill-opacity", 1)
                 .attr("stroke-opacity", 1);
 
             // Transition exiting nodes to the parent's new position.
-            const nodeExit = node.exit().transition(transition).remove()
+            node.exit().transition(transition).remove()
                 .attr("transform", d => `translate(${source.y},${source.x})`)
                 .attr("fill-opacity", 0)
                 .attr("stroke-opacity", 0);
+
 
             // Update the links…
             const link = gLink.selectAll("path")
@@ -140,7 +141,7 @@ var chart_tree = {
             // Enter any new links at the parent's previous position.
             const linkEnter = link.enter().append("path")
                 .attr("d", d => {
-                    const o = { x: source.x0, y: source.y0 };
+                    const o = { x: show_transition ? source.x0 : d.x, y: show_transition ? source.y0 : d.y };
                     return this.diagonal({ source: o, target: o });
                 });
 
@@ -185,7 +186,7 @@ var chart_tree = {
             svg.call(d3.zoom().transform, this.transform_attr);
             g.attr("transform", this.transform_attr.toString())
         }
-        this.update(root);
+        this.update(root, false);
         this.data = root; //save data for later use and refresh
     }
 }
