@@ -39,7 +39,7 @@ server = {
         if (id !== null) json.id = id
         $.ajax({
             url: (url) ? url : this.create_path(this.address),
-            type: (graph_data.id) ? 'put' : 'post',
+            type: (id) ? 'put' : 'post',
             dataType: 'json',
             contentType: 'application/json',
             success: function(data) {
