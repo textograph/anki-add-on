@@ -29,7 +29,6 @@ var graph_data = {
     },
     pasteIntoCurrentNode() {
         _nodes = new Map()
-        max_id = this.auto_inc_id
         try {
             // makes hierarchial jason graph to tabular form
             tmp_arr = destratify(this.clipboard, this.current_node, this.auto_inc_id)
@@ -40,10 +39,10 @@ var graph_data = {
             });
 
         } catch (error) {
+            console.log("there is an error in pasting")
             return false;
         }
         this.nodes = new Map([...this.nodes, ..._nodes])
-
     },
     deleteNode(parent, nodes) {
         nodes.forEach((node, index) => {
@@ -151,7 +150,7 @@ var graph_data = {
         return stratify(parent, nodes, copy_id) //parent is null so it returns all hierarchy including root
     },
     setData(json_graph) {
-        _nodes = new Map()
+        let _nodes = new Map()
         try {
             // makes hierarchial jason graph to tabular form
             tmp_arr = destratify(json_graph, null)
@@ -215,14 +214,17 @@ function stratify(parent, nodes, copy_id = true) {
 function destratify(node, parent = null, base_id = null) {
     let child_arr = []
     let cur_obj = {
-        id: base_id ? ++base_id : node.id,
+        id: base_id ? base_id++ : node.id,
         name: node.name,
         parent: parent,
         note_id: node.note_id
     }
     node.children.forEach(child => {
         this_node_childs = destratify(child, cur_obj, base_id)
-        base_id += this_node_childs.length
+        if (base_id != null) {
+            base_id += this_node_childs.length
+        }
+
         child_arr = child_arr.concat(this_node_childs)
 
     });
