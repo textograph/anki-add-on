@@ -23,6 +23,16 @@ action_funcs = {
     "delete-node": () => {
         graph_data.deleteCurrentNode()
         refresh_view()
+    },
+    "copy-node": () => graph_data.copyCurrentNode(),
+    "paste-node": () => {
+        graph_data.pasteIntoCurrentNode();
+        refresh_view();
+    },
+    "cut-node": () => {
+        graph_data.copyCurrentNode();
+        graph_data.deleteCurrentNode();
+        refresh_view()
     }
 }
 
@@ -129,9 +139,10 @@ $("#canvas-toolbar").on('click', 'div', function() {
 
 $("#mini-toolbar").on('click', 'div', function() {
     if (curr_selected_text || auto_repeat) {
+        // do action if there is a selection or we are in recording mode
         console.log(curr_selected_text);
         the_id = $(this).attr("id")
-        if (the_id == "auto-repeat" || the_id == repeat_action) {
+        if (the_id == "auto-repeat" || the_id == repeat_action) { // code block to turn blinking on or off
             auto_repeat = auto_repeat ? false : true;
             set_clss("auto-repeat", auto_repeat ? "blink" : "")
             set_clss(repeat_action, "") //turn off prev
@@ -140,7 +151,9 @@ $("#mini-toolbar").on('click', 'div', function() {
             return;
         }
         hide_minitoolbar()
-        if (arr_cummulated_text.length > 0) {
+        if (arr_cummulated_text.length > 0 && the_id != "add-text") {
+            // aggregate previously selected texts if we are not in recording mode
+            arr_cummulated_text.push(curr_selected_text)
             curr_selected_text = arr_cummulated_text.join(" ")
             delete arr_cummulated_text;
             arr_cummulated_text = []
