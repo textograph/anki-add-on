@@ -161,21 +161,27 @@ var chart_tree = {
                 d.y0 = d.y;
             });
 
-
-            g.selectAll("text").on("click", function(d) {
+            function selectNode(d, _this = null) {
+                if (_this == null) _this = this
                 if (drawer.curr_selection != null) {
                     drawer.curr_selection.attr('class', 'black_text')
                 }
-                txt = d3.select(this)
+                txt = d3.select(_this)
                 txt.attr('class', "red_text")
                 the_id = d.data.id
                 graph_data.changeCurrentNode(the_id)
                 test = `#${the_id}`
                 drawer.curr_selection = txt
                 drawer.curr_hierarchy_node = d
-                showCanvasToolbar(this)
-                console.log("hello " + d.data.name);
-            })
+            }
+            g.selectAll("text").on("click", function(d) { selectNode(d, this) })
+                .on('contextmenu', function(d) {
+                    d3.event.preventDefault();
+                    selectNode(d, this);
+                    showCanvasToolbar(this)
+                })
+            d3.select('body').on("click", () => hideCanvasToolbar(this))
+
             svg.call(d3.zoom().transform, this.transform_attr);
             g.attr("transform", this.transform_attr.toString())
         }

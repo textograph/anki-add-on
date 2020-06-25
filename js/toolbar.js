@@ -116,6 +116,9 @@ document.addEventListener("mousedown", function() {
 })
 
 function showCanvasToolbar(node) {
+    // this function and next one are public and are called from chart and collapsible_tree objects.
+    // in the future i must create a Draw class and create tree and collapsible_tree objects from Draw class
+    // and initialize each object with a context menu function, in this way the encapsulation rule is not violated
     e = d3.event;
     const toolbar = $("#canvas-toolbar");
     toolbar.css("display", 'block');
@@ -131,6 +134,7 @@ function hideCanvasToolbar(node) {
     toolbar = $("#canvas-toolbar");
     toolbar.css("display", 'none');
 }
+
 // if toolbar buttons clicked
 $("#canvas-toolbar").on('click', 'div', function() {
     the_id = $(this).attr("id")
