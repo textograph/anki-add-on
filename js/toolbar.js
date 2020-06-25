@@ -19,6 +19,20 @@ action_funcs = {
         const note_id = graph_data.addNote(d)
         graph_data.changeCurrentNote(note_id)
         return true;
+    },
+    "delete-node": () => {
+        graph_data.deleteCurrentNode()
+        refresh_view()
+    },
+    "copy-node": () => graph_data.copyCurrentNode(),
+    "paste-node": () => {
+        graph_data.pasteIntoCurrentNode();
+        refresh_view();
+    },
+    "cut-node": () => {
+        graph_data.copyCurrentNode();
+        graph_data.deleteCurrentNode();
+        refresh_view()
     }
 }
 
@@ -97,13 +111,42 @@ if (!document.all) document.captureEvents(Event.MOUSEUP);
 text_area.onchange = function() {
     $("#text-view").text(this.value)
 }
+document.addEventListener("mousedown", function() {
+    console.log("click")
+})
+
+function showCanvasToolbar(node) {
+    // this function and next one are public and are called from chart and collapsible_tree objects.
+    // in the future i must create a Draw class and create tree and collapsible_tree objects from Draw class
+    // and initialize each object with a context menu function, in this way the encapsulation rule is not violated
+    e = d3.event;
+    const toolbar = $("#canvas-toolbar");
+    toolbar.css("display", 'block');
+    const Y = e.clientY - (toolbar.height() / 2);
+    const X = e.clientX - toolbar.width() - 10;
+    toolbar.css("left", `${X}px`);
+    toolbar.css("top", `${Y}px`);
+    console.log(e.clientY, e.clientX)
+}
+
+function hideCanvasToolbar(node) {
+    console.log("hiding")
+    toolbar = $("#canvas-toolbar");
+    toolbar.css("display", 'none');
+}
 
 // if toolbar buttons clicked
+$("#canvas-toolbar").on('click', 'div', function() {
+    the_id = $(this).attr("id")
+    action_funcs[the_id]()
+})
+
 $("#mini-toolbar").on('click', 'div', function() {
     if (curr_selected_text || auto_repeat) {
+        // do action if there is a selection or we are in recording mode
         console.log(curr_selected_text);
         the_id = $(this).attr("id")
-        if (the_id == "auto-repeat" || the_id == repeat_action) {
+        if (the_id == "auto-repeat" || the_id == repeat_action) { // code block to turn blinking on or off
             auto_repeat = auto_repeat ? false : true;
             set_clss("auto-repeat", auto_repeat ? "blink" : "")
             set_clss(repeat_action, "") //turn off prev
@@ -112,7 +155,9 @@ $("#mini-toolbar").on('click', 'div', function() {
             return;
         }
         hide_minitoolbar()
-        if (arr_cummulated_text.length > 0) {
+        if (arr_cummulated_text.length > 0 && the_id != "add-text") {
+            // aggregate previously selected texts if we are not in recording mode
+            arr_cummulated_text.push(curr_selected_text)
             curr_selected_text = arr_cummulated_text.join(" ")
             delete arr_cummulated_text;
             arr_cummulated_text = []

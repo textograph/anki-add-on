@@ -19,6 +19,41 @@ var graph_data = {
     name: null,
     id: null,
     url: null,
+    clipboard: null,
+    deleteCurrentNode() {
+        nodes = [...this.nodes.values()]
+        this.deleteNode(this.current_node, nodes)
+    },
+    copyCurrentNode() {
+        this.clipboard = this.stratify(this.current_node, false)
+    },
+    pasteIntoCurrentNode() {
+        _nodes = new Map()
+        try {
+            // makes hierarchial jason graph to tabular form
+            tmp_arr = destratify(this.clipboard, this.current_node, this.auto_inc_id)
+            this.auto_inc_id += tmp_arr.length
+                // saves tabular data in a temporary Map object (Dictionary)
+            tmp_arr.forEach(node => {
+                _nodes.set(node.id, node)
+            });
+
+        } catch (error) {
+            console.log("there is an error in pasting")
+            return false;
+        }
+        this.nodes = new Map([...this.nodes, ..._nodes])
+    },
+    deleteNode(parent, nodes) {
+        nodes.forEach((node, index) => {
+            if (node.parent == parent) {
+                delete nodes[index]
+                this.deleteNode(node, nodes)
+            }
+        });
+        this.nodes.delete(parent.id)
+    },
+
     addChildTo(node, parent = null, data = null) {
         // adds new node to nodes repo, increases autonumber, 
         //  and makes currnt_node pointer to point to the newly created node
@@ -63,7 +98,6 @@ var graph_data = {
             // there is no node in our repo so create first one
             throw "Error: there is no active node, however nodes' repo is not empty"
         }
-
     },
 
     addSibling(node) { // adds a child to the parent of current node
@@ -107,16 +141,16 @@ var graph_data = {
     setNotes(notes) {
         this.notes = notes
     },
-    stratify(parent = null) {
+    stratify(parent = null, copy_id = true) {
         nodes = [...this.nodes.values()]
         if (parent == null) {
             root_id = Math.min(...this.nodes.keys())
             parent = this.nodes.get(root_id)
         }
-        return stratify(parent, nodes) //parent is null so it returns all hierarchy including root
+        return stratify(parent, nodes, copy_id) //parent is null so it returns all hierarchy including root
     },
     setData(json_graph) {
-        _nodes = new Map()
+        let _nodes = new Map()
         try {
             // makes hierarchial jason graph to tabular form
             tmp_arr = destratify(json_graph, null)
@@ -159,32 +193,40 @@ var graph_data = {
 }
 
 
-function stratify(parent, nodes) {
+function stratify(parent, nodes, copy_id = true) {
     const new_node = {
-        id: parent.id,
         name: parent.name,
         note_id: parent.note_id,
         children: new Array()
     }
+    if (copy_id) new_node.id = parent.id
     nodes.forEach((node, index) => {
         if (node.parent == parent) {
             delete nodes[index]
-            new_node.children.push(stratify(node, nodes))
+            new_node.children.push(stratify(node, nodes, copy_id))
         }
     });
     return new_node
 }
 
-function destratify(node, parent = null) {
+
+
+function destratify(node, parent = null, base_id = null) {
     let child_arr = []
     let cur_obj = {
-        id: node.id,
+        id: base_id ? base_id++ : node.id,
         name: node.name,
         parent: parent,
         note_id: node.note_id
     }
     node.children.forEach(child => {
-        child_arr = child_arr.concat(destratify(child, cur_obj))
+        this_node_childs = destratify(child, cur_obj, base_id)
+        if (base_id != null) {
+            base_id += this_node_childs.length
+        }
+
+        child_arr = child_arr.concat(this_node_childs)
+
     });
     child_arr.push(cur_obj)
     return child_arr;

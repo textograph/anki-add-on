@@ -57,7 +57,7 @@ text {
     padding: 10px;
 }
 
-#mini-toolbar {
+#mini-toolbar, #canvas-toolbar {
     opacity: 90%;
     top: 0;
     position: absolute;
@@ -68,7 +68,7 @@ text {
     justify-content: space-around;
 }
 
-#mini-toolbar div {
+#mini-toolbar div, #canvas-toolbar div {
     opacity: 100% !important;
     /*     background: rgb(173, 139, 88); */
     width: auto;
@@ -79,7 +79,17 @@ text {
     font-size: 30 !important;
     cursor: pointer;
 }
+#canvas-toolbar {
+    height: auto;
+}
+#canvas-toolbar div{
+    opacity: .8 !important;
+    margin: 10px 5px;
+}
 
+#canvas-toolbar div:hover{
+    opacity: 1 !important;
+}
 #toolbar div {
     margin: 10px;
 }
