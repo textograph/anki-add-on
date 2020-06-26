@@ -33,6 +33,10 @@ action_funcs = {
         graph_data.copyCurrentNode();
         graph_data.deleteCurrentNode();
         refresh_view()
+    },
+    "add-note": (d) => {
+        note_id = graph_data.addNote(d)
+        graph_data.current_node.note_id = note_id
     }
 }
 

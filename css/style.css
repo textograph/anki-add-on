@@ -343,7 +343,10 @@ graph span.edit-name:hover {
 div svg:not(:root).svg-inline--fa {
     font-size: 25px;
 }
-
+.svg-inline--fa.fa-stack-1x{
+    width: .5em !important;
+    
+}
 .modal-body div.jHtmlArea {
     width: 100% !important;
 }
