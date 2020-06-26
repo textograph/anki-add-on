@@ -37,6 +37,13 @@ action_funcs = {
     "add-note": (d) => {
         note_id = graph_data.addNote(d)
         graph_data.current_node.note_id = note_id
+    },
+    "edit-node": () => {
+        const node_name = prompt("enter new name for this node", graph_data.current_node.name)
+        if (node_name) {
+            graph_data.current_node.name = node_name
+            refresh_view()
+        }
     }
 }
 
