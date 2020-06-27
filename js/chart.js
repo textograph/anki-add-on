@@ -23,6 +23,7 @@ var radial_tree = {
     zoom: 10,
     radius: 100,
     transform_attr: d3.zoomIdentity,
+    selected_node_id: null,
     refresh() {
         this.draw(this.data)
     },
@@ -33,7 +34,27 @@ var radial_tree = {
         svg = d3.select('#svg_canvas');
         svg.attr("viewBox", autoBox(this.zoom / 10))
     },
+    selectNode(d, _this = null) {
+        // make previously selected node as black (unselected)
+        if (_this == null) _this = this
+        if (this.curr_selection != null) {
+            this.curr_selection.attr('class', 'black_text')
+        }
+        txt = d3.select(_this)
+        txt.attr('class', "red_text")
+        the_id = d.data.id
+        graph_data.changeCurrentNode(the_id)
+        test = `#${the_id}`
+        this.curr_selection = txt
+        this.selected_node_id = d.data.id
+    },
+
+    hilightNode(node_id) {
+        node = d3.select(`#node_${node_id}`)
+        this.selectNode(node.datum(), node.node())
+    },
     draw(hierarchy_data) {
+        _this = this
         this.data = hierarchy_data; //save data for later use and for refresh
         tree = d3.tree()
             .size([2 * Math.PI, this.radius * 10])
@@ -79,6 +100,8 @@ var radial_tree = {
             .selectAll("text")
             .data(root.descendants())
             .join("text")
+            .attr("id", d => `node_${d.data.id}`)
+            .attr("class", d => d.data.id == this.selected_node_id ? "red_text" : "")
             .attr("transform", d => `
             rotate(${d.x * 180 / Math.PI - 90}) 
             translate(${d.y},0) 
@@ -90,8 +113,16 @@ var radial_tree = {
             .text(d =>
                 d.data.name)
             .call(wrap_text)
+            .on("click", function(d) { _this.selectNode(d, this) })
+            .on('contextmenu', function(d) {
+                d3.event.preventDefault();
+                _this.selectNode(d, this);
+                showCanvasToolbar(this)
+            })
             .clone(true).lower()
-            .attr("stroke", "white");
+            .attr("stroke", "white")
+            .attr("id", d => "")
+        this.curr_selection = d3.select(`#node_${this.selected_node_id}`)
 
         tip = d3.tip().direction('e')
             .attr('class', 'd3-tip')
@@ -106,28 +137,8 @@ var radial_tree = {
             .on("mouseover", function(d) { tip.show(d); })
             .on('mouseout', function(d) { tip.hide(d); })
 
-        function selectNode(d, _this = null) {
-            // make previously selected node as black (unselected)
-            if (_this == null) _this = this
-            if (drawer.curr_selection != null) {
-                drawer.curr_selection.attr('class', 'black_text')
-            }
-            txt = d3.select(_this)
-            txt.attr('class', "red_text")
-            the_id = d.data.id
-            graph_data.changeCurrentNode(the_id)
-            test = `#${the_id}`
-            drawer.curr_selection = txt
-            drawer.curr_hierarchy_node = d
-        }
 
-        g.selectAll("text").on("click", function(d) { selectNode(d, this) })
-            .on('contextmenu', function(d) {
-                d3.event.preventDefault();
-                selectNode(d, this);
-                showCanvasToolbar(this)
-            })
-
+        // g.selectAll("text")
 
 
         svg.attr("viewBox", [-300, -300, 600, 600])

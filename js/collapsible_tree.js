@@ -11,6 +11,7 @@ var chart_tree = {
     data: null,
     transform_attr: d3.zoomIdentity,
     curr_selection: null,
+    selected_node_id: null,
     refresh() {
         this.tree = d3.tree().nodeSize([this.dx, this.dy * this.radius])
         this.update(this.data, false);
@@ -26,6 +27,7 @@ var chart_tree = {
         ]
     },
     draw(root) {
+        _this = this
         this.tree = d3.tree().nodeSize([this.dx, this.dy * this.radius])
 
         root.x0 = this.dy / 2;
@@ -116,10 +118,21 @@ var chart_tree = {
                 .attr("x", d => d._children ? -6 : 6)
                 .attr("text-anchor", d => d._children ? "end" : "start")
                 .text(d => d.data.name)
+                .attr("id", d => `node_${d.data.id}`)
+                .attr("class", d => d.data.id == this.selected_node_id ? "red_text" : "")
+                .on("click", function(d) { _this.selectNode(d, this) })
+                .on('contextmenu', function(d) {
+                    d3.event.preventDefault();
+                    _this.selectNode(d, this);
+                    showCanvasToolbar(this)
+                })
                 .clone(true).lower()
                 .attr("stroke-linejoin", "round")
                 .attr("stroke-width", 3)
-                .attr("stroke", "white");
+                .attr("stroke", "white")
+                .attr("stroke", "white")
+                .attr("id", d => "")
+            this.curr_selection = d3.select(`#node_${this.selected_node_id}`);
 
             // Transition nodes to their new position.
             node.merge(nodeEnter).transition(transition)
@@ -162,25 +175,7 @@ var chart_tree = {
                 d.y0 = d.y;
             });
 
-            function selectNode(d, _this = null) {
-                if (_this == null) _this = this
-                if (drawer.curr_selection != null) {
-                    drawer.curr_selection.attr('class', 'black_text')
-                }
-                txt = d3.select(_this)
-                txt.attr('class', "red_text")
-                the_id = d.data.id
-                graph_data.changeCurrentNode(the_id)
-                test = `#${the_id}`
-                drawer.curr_selection = txt
-                drawer.curr_hierarchy_node = d
-            }
-            g.selectAll("text").on("click", function(d) { selectNode(d, this) })
-                .on('contextmenu', function(d) {
-                    d3.event.preventDefault();
-                    selectNode(d, this);
-                    showCanvasToolbar(this)
-                })
+            // g.selectAll("text")
             d3.select('body').on("click", () => hideCanvasToolbar(this))
 
             svg.call(d3.zoom().transform, this.transform_attr);
@@ -188,5 +183,22 @@ var chart_tree = {
         }
         this.update(root, false);
         this.data = root; //save data for later use and refresh
-    }
+    },
+    selectNode(d, _this = null) {
+        if (_this == null) _this = this
+        if (this.curr_selection != null) {
+            this.curr_selection.attr('class', 'black_text')
+        }
+        txt = d3.select(_this)
+        txt.attr('class', "red_text")
+        the_id = d.data.id
+        graph_data.changeCurrentNode(the_id)
+        test = `#${the_id}`
+        this.curr_selection = txt
+        this.selected_node_id = d.data.id
+    },
+    hilightNode(node_id) {
+        node = d3.select(`#node_${node_id}`)
+        this.selectNode(node.datum(), node.node())
+    },
 }
