@@ -14,7 +14,7 @@ action_funcs = {
     "child": (d) => { graph_data.addChild(d) },
     "before": (d) => { graph_data.addUncle(d) },
     "below": (d) => { graph_data.addSibling(d) },
-    "add-text": (d) => { arr_cummulated_text.push(d) },
+    "add-text": (d) => { arr_cummulated_text.push(d); return true; },
     "note": (d) => {
         const note_id = graph_data.addNote(d)
         graph_data.changeCurrentNote(note_id)
@@ -37,6 +37,7 @@ action_funcs = {
     "add-note": (d) => {
         note_id = graph_data.addNote(d)
         graph_data.current_node.note_id = note_id
+        return true;
     },
     "edit-node": () => {
         const node_name = prompt("enter new name for this node", graph_data.current_node.name)
@@ -75,6 +76,12 @@ function gText(e) {
             deselectAllTexts()
             curr_selected_text = ""
             t = ""
+            if (repeat_action == "child") {
+                // dont allow auto child creation, change it to add sibling instead                
+                set_clss(repeat_action, "") //turn off prev
+                repeat_action = "below"
+                set_clss(repeat_action, "green-color") //turn on current                
+            }
         }
         showMiniToolbar(e);
     } else {
@@ -176,13 +183,14 @@ $("#mini-toolbar").on('click', 'div', function() {
         if (curr_selected_text !== "")
             if (!action_funcs[the_id](curr_selected_text)) {
                 redraw_graph()
+                if (the_id == "child") the_id = "below" // dont allow auto child creation; instead, change it to add sibling 
                 curr_selected_text = ""
                     // save_to_document()
                     // $("#save_area").text(`json_data=${json_str}; graph_data.setData(json_data);`)
             }
         if (auto_repeat)
             if (repeat_action != "add-text") {
-                set_clss(repeat_action, "") //turn off prev
+                set_clss(repeat_action, "") //turn off prev                             
                 set_clss(the_id, "green-color") //turn on current
                 repeat_action = the_id;
 
