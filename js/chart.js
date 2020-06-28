@@ -211,5 +211,4 @@ function wrap_svg_text(element) {
     document.getElementById("PROCESSING").remove();
 
 }
-
-drawer = radial_tree
+drawer = radial_tree;

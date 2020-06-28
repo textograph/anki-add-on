@@ -4,7 +4,9 @@ var text_view = document.getElementById("text-view");
 var viewBoxSlider = document.getElementById("sliderViewBox");
 var radiusSlider = document.getElementById("sliderRadius");
 var show_quiz_leaves_label = document.getElementById("quiz-leaves-label");
-var show_quiz_leaves = document.getElementById("quiz-leaves");
+var show_quiz_leaves = {
+    checked: true
+}
 var t = '';
 var curr_selected_text = '';
 var auto_repeat = false
@@ -175,10 +177,6 @@ text_view.onmouseup = gText;
 if (!document.all) document.captureEvents(Event.MOUSEUP);
 
 
-// call if textarea has been change
-text_area.onchange = function() {
-    $("#text-view").text(this.value)
-}
 document.addEventListener("mousedown", function() {
     console.log("click")
 })
@@ -302,8 +300,8 @@ function redraw_graph(draw = true) {
     // puts new data into chart and draws the chart from scratch
 
     if (graph_data.nodes.size) {
-        viewBoxSlider.value = drawer.zoom
-        radiusSlider.value = drawer.radius
+        // viewBoxSlider.value = drawer.zoom
+        // radiusSlider.value = drawer.radius
         json = graph_data.stratify();
         let data = d3.hierarchy(json);
         drawer.selected_node_id = graph_data.current_node.id
@@ -315,7 +313,6 @@ function redraw_graph(draw = true) {
 
 //var output = document.getElementById("demo");
 //output.innerHTML = slider.value;
-show_quiz_leaves_label.onchange = getQuiz
 
 function getQuiz() {
     let active_node = graph_data.getActiveNode()
@@ -379,15 +376,10 @@ function getQuiz() {
         d3.select("#quiz_choices").remove()
     }
 }
-radiusSlider.oninput = function() {
-    drawer.radius = this.value;
-    drawer.refresh();
-}
-
-viewBoxSlider.oninput = function() {
-    drawer.changeZoom(this.value);
-    console.log(this.value);
-}
+$("#reload-graph").on("click", function() {
+    graph_data.setData(json_data)
+    refresh_view()
+})
 
 function remove_leaves(hierarchy) {
     hierarchy.descendants().forEach((d, i) => {
@@ -407,3 +399,70 @@ function remove_leaves(hierarchy) {
         }
     });
 }
+
+
+json_data = {
+    "id": 0,
+    "name": "Reactive arthritis",
+    "children": [{
+        "id": 1,
+        "name": "EPIDEMIOLOGY",
+        "children": [{
+            "id": 2,
+            "name": " rare disease",
+            "children": []
+        }, {
+            "id": 3,
+            "name": "young adults",
+            "children": []
+        }, {
+            "id": 4,
+            "name": "both men and women",
+            "children": []
+        }, {
+            "id": 5,
+            "name": "incidence",
+            "children": [{
+                "id": 6,
+                "name": "highly heterogeneous",
+                "children": []
+            }]
+        }, {
+            "id": 7,
+            "name": "enteric bacterial infections",
+            "children": [{
+                "id": 8,
+                "name": "Campylobacter",
+                "children": [{
+                    "id": 9,
+                    "name": "Salmonella",
+                    "children": []
+                }]
+            }, {
+                "id": 10,
+                "name": "Salmonella",
+                "children": []
+            }, {
+                "id": 11,
+                "name": "Shigella",
+                "children": []
+            }]
+        }, {
+            "id": 12,
+            "name": "sporadically",
+            "children": []
+        }, {
+            "id": 13,
+            "name": "outbreaks",
+            "children": []
+        }]
+    }, {
+        "id": 14,
+        "name": "causative pathogens",
+        "children": []
+    }]
+};
+graph_data.setData(json_data);
+drawer = chart_tree;
+json = graph_data.stratify();
+refresh_view();
