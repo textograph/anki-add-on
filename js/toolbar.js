@@ -326,7 +326,7 @@ function getQuiz() {
         d3.select("#quiz_choices").remove()
     }
 }
-$("#reload-graph").on("click", function() {
+$("#switch-graph").on("click", function() {
     drawer = (drawer == radial_tree) ? chart_tree : radial_tree;
     refresh_view()
 })
