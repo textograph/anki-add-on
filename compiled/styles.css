@@ -1,6 +1,6 @@
 .d3-tip {
     line-height: 1;
-/*     font-weight: bold; */
+    /*     font-weight: bold; */
     padding: 12px;
     background: rgba(226, 219, 124, 0.7);
     color: rgb(0, 0, 0);
@@ -70,9 +70,11 @@
     margin: 2px;
     padding: 3px;
     color: red;
-    background-color: rgba(120, 207, 117,0.5);
-    opacity:70;
-}* {
+    background-color: rgba(120, 207, 117, 0.5);
+    opacity: 70;
+}
+
+* {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -80,7 +82,7 @@
 }
 
 html {
-/*     color: #DEF; */
+    /*     color: #DEF; */
     font-size: 16px;
     font-family: "Open Sans", "Helvetica Neue", Tahoma, sans-serif;
 }
@@ -125,7 +127,7 @@ body {
 }
 
 .dataTable {
-    background-color:bisque;
+    background-color: bisque;
     -webkit-flex: 1;
     flex: 1;
     position: relative;
@@ -154,7 +156,7 @@ body {
     justify-content: flex-end;
     align-items: stretch;
     padding: 0;
-    background-color:white;
+    background-color: white;
     -webkit-flex: 0 0 20rem;
     flex: 0 0 30rem;
     order: 1;
@@ -205,7 +207,9 @@ body {
     background-color: rgba(0, 0, 0, 0.5);
     cursor: col-resize;
     z-index: 9999;
-}#chart {
+}
+
+#chart {
     cursor: grabbing;
     /* height: 0vmax; */
 }
