@@ -48,4 +48,3 @@
 }).call(this);
 
 
-//# sourceURL=coffeescript

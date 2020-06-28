@@ -1,11 +1,3 @@
-class GraphNode {
-    constructor(id, name, parent = null) {
-        this.id = id;
-        this.name = name;
-        this.parent = parent;
-    }
-}
-
 var graph_data = {
     nodes: new Map(),
     notes: {},
@@ -70,7 +62,11 @@ var graph_data = {
             if (this.nodes.size == 0 || // there is no other node (creating root node)
                 this.nodes.has(parent.id) // or check if parent is present
             ) {
-                new_node = new GraphNode(this.auto_inc_id, node, parent)
+                new_node = {
+                    id: this.auto_inc_id,
+                    name: node,
+                    parent: parent
+                }
                 new_node = Object.assign(new_node, data) // add additional data to new node
                 this.nodes.set(this.auto_inc_id++, new_node) // add new node to our node repo
                 this.current_node = new_node;
@@ -231,4 +227,4 @@ function destratify(node, parent = null, base_id = null) {
     child_arr.push(cur_obj)
     return child_arr;
 }
-var graph_data_copy = graph_data
+var graph_data_copy = graph_data;
