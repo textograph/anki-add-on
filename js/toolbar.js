@@ -45,6 +45,51 @@ action_funcs = {
             graph_data.current_node.name = node_name
             refresh_view()
         }
+    },
+    "add-to-anki": () => {
+        frontjson = graph_data.stratify(graph_data.current_node)
+        notes = graph_data.getNotes()
+        settings = `radial_tree.zoom = ${radial_tree.zoom};
+        radial_tree.radius = ${radial_tree.radius};
+        chart_tree.zoom = ${chart_tree.zoom};
+        chart_tree.radius = ${chart_tree.radius};`
+        json = {
+            "action": "addNote",
+            "version": 6,
+            "params": {
+                "note": {
+                    "deckName": "Default",
+                    "modelName": "Textograph",
+                    "fields": {
+                        "TestGraph": JSON.stringify(frontjson),
+                        "AnswerGraph": "show_quiz_leaves.checked=false;refresh_view();",
+                        "Notes": JSON.stringify(notes),
+                        "Settings": settings
+                    },
+                    "options": {
+                        "allowDuplicate": true,
+                        "duplicateScope": "deck"
+                    },
+                    "tags": [
+                        "textograph"
+                    ],
+                }
+            }
+        }
+
+        $.post({
+            url: 'http://localhost:8765',
+            data: JSON.stringify(json),
+            error: function(xhr, status, error) {
+                var err = xhr.responseText;
+                server_obj.busy = false
+                alert(err.Message);
+            },
+            success: function(data) {
+                // ********* better to write with try catch  ****
+                alert("anki note created successfully")
+            }
+        })
     }
 }
 
