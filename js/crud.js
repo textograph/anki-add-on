@@ -104,8 +104,9 @@ server = {
         $.ajax({
             url: url,
             type: 'get',
-            dataType: 'json',
-            contentType: 'application/json',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', 'Basic ' + btoa('user:pass'));
+            },
             error: function(xhr, status, error) {
                 var err = xhr.responseText;
                 server_obj.busy = false
