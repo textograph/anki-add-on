@@ -47,35 +47,6 @@ action_funcs = {
         }
     },
     "add-to-anki": () => {
-        function invoke(json) {
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.addEventListener('error', () => reject('failed to issue request'));
-                xhr.addEventListener('load', () => {
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        if (Object.getOwnPropertyNames(response).length != 2) {
-                            throw 'response has an unexpected number of fields';
-                        }
-                        if (!response.hasOwnProperty('error')) {
-                            throw 'response is missing required error field';
-                        }
-                        if (!response.hasOwnProperty('result')) {
-                            throw 'response is missing required result field';
-                        }
-                        if (response.error) {
-                            throw response.error;
-                        }
-                        resolve(response.result);
-                    } catch (e) {
-                        reject(e);
-                    }
-                });
-
-                xhr.open('POST', 'http://127.0.0.1:8765');
-                xhr.send(JSON.stringify(json));
-            });
-        }
         frontjson = graph_data.stratify(graph_data.current_node)
         json = {
             "action": "addNote",
@@ -93,13 +64,28 @@ action_funcs = {
                         "duplicateScope": "deck"
                     },
                     "tags": [
-                        "yomichan"
+                        "textograph"
                     ],
                 }
             }
         }
 
-        invoke(json);
+        $.ajax({
+            url: 'http://localhost:8765',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(json),
+            error: function(xhr, status, error) {
+                var err = xhr.responseText;
+                server_obj.busy = false
+                alert(err.Message);
+            },
+            success: function(data) {
+                // ********* better to write with try catch  ****
+                alert("success")
+            }
+        })
     }
 }
 
