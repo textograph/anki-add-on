@@ -70,11 +70,8 @@ action_funcs = {
             }
         }
 
-        $.ajax({
+        $.post({
             url: 'http://localhost:8765',
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
             data: JSON.stringify(json),
             error: function(xhr, status, error) {
                 var err = xhr.responseText;
@@ -83,7 +80,7 @@ action_funcs = {
             },
             success: function(data) {
                 // ********* better to write with try catch  ****
-                alert("success")
+                alert("anki note created successfully")
             }
         })
     }
