@@ -90,7 +90,6 @@ var chart_tree = {
                 .html(function(d) {
                     the_note = getNodeNote(d)
                     if (the_note) {
-                        the_note = graph_data.getNote(d.data.note_id)
                         node_name = d.data.name
                         var res = the_note.replace(new RegExp(`(${node_name})`), '<span id="name_word"><b>$1</b></span>');
                         return res;
