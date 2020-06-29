@@ -101,9 +101,8 @@ server = {
         if (!url) return
         server_obj = this
         this.busy = true
-        $.ajax({
+        $.get({
             url: url,
-            type: 'get',
             beforeSend: function(xhr) {
                 xhr.setRequestHeader('Authorization', 'Basic ' + btoa('user:pass'));
             },
