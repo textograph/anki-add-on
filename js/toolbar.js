@@ -70,7 +70,10 @@ action_funcs = {
                         "duplicateScope": "deck"
                     },
                     "tags": [
-                        "textograph"
+                        "textograph",
+                        graph_data.root_node.name,
+                        graph_data.name,
+                        graph_data.current_node.name
                     ],
                 }
             }
