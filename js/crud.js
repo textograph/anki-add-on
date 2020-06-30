@@ -68,7 +68,7 @@ server = {
     },
     get_firstpage() {
         const url = this.make_url_from_scratch(this.address, {
-            per_page: 3,
+            per_page: 15,
             name: this.graph_name,
             search: this.search_term
         })
