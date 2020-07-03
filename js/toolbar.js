@@ -49,9 +49,9 @@ action_funcs = {
         frontjson = graph_data.stratify(graph_data.current_node)
         notes = graph_data.getNotes()
         settings = `radial_tree.zoom = ${radial_tree.zoom};
-        radial_tree.radius = ${radial_tree.radius};
-        chart_tree.zoom = ${chart_tree.zoom};
-        chart_tree.radius = ${chart_tree.radius};`
+        radial_tree.radius = 25
+        chart_tree.zoom = ${chart_tree.zoom}
+        chart_tree.radius = 10;`
         json = {
             "action": "addNote",
             "version": 6,
