@@ -102,6 +102,9 @@ $(document).keyup(function(e) {
         set_clss(repeat_action, "") //turn off prev
         repeat_action = null
         return;
+    } else if (e.keyCode === 46) {
+        graph_data.deleteCurrentNode()
+        refresh_view()
     }
 });
 
