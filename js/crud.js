@@ -20,7 +20,10 @@ server = {
         this.search_term = search_term;
     },
     save() {
-        this.saveAs(graph_data.id, graph_data.name, graph_data.url)
+        if (graph_data.name)
+            this.saveAs(graph_data.id, graph_data.name, graph_data.url)
+        else
+            this.saveAs()
     },
     saveAs(id = null, name = null, url = null) {
         json = {}
@@ -35,6 +38,7 @@ server = {
         json.json = graph_data.stratify()
         json.property = property
         json.name = (name) ? name : document.getElementById("save-name").value;
+
         // *************  check for duplicate name
         if (id !== null) json.id = id
         $.ajax({
@@ -43,6 +47,7 @@ server = {
             dataType: 'json',
             contentType: 'application/json',
             success: function(data) {
+                graph_data.name = json.name
                 alert("data saved")
             },
             data: JSON.stringify(json)
