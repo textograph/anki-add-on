@@ -2,12 +2,12 @@
 COPYRIGTH Abdolmahdi Saravi 2020(amsaravi at yahoo.com)
 APACHE 2 Licence
 '''
-import sys
-from pprint import pp
 
 import aqt
+from anki.consts import MODEL_CLOZE
 from aqt import gui_hooks
-from aqt.utils import showInfo
+
+from . import template
 
 '''
 IMPORTANT:  I wish anki does not change its aqt.mw.reviewer.card object, otherwise every thing will broke
@@ -83,6 +83,37 @@ def my_q_show(the_card):
         the_card.sub_questions = []
 
 
+def create_model():
+    mm = aqt.mw.col.models
+    m = mm.new(Textograph_MODEL_NAME)
+    m["type"] = MODEL_CLOZE
+
+    if m:
+        for i in TG_FIELDS:
+            new_fld = mm.newField(TG_FIELDS[i])
+            mm.addField(m, new_fld)
+        t = mm.newTemplate(Textograph_CARD_NAME)
+
+        m["css"] += template.get_css()
+        t["qfmt"] = template.create_frontside()
+        t["afmt"] = template.create_backside()
+
+        mm.addTemplate(m, t)
+        mm.add(m)
+
+TG_FIELDS = {
+    'cloze': 'AnswerGraph',
+    'grph': 'TestGraph',
+    'grph_notes': 'Notes',
+    'txt': 'Text',
+    'stngs': 'Settings',
+}
+
+Textograph_MODEL_NAME = "Textograph 1"
+Textograph_CARD_NAME = 'Textograph Card'
+
+
 gui_hooks.webview_did_receive_js_message.append(correct_sub_answer)
 gui_hooks.reviewer_did_show_question.append(my_q_show)
 gui_hooks.reviewer_did_answer_card.append(create_new_cloze)
+gui_hooks.profile_did_open.append(create_model)
