@@ -1,0 +1,265 @@
+.d3-tip {
+    line-height: 1;
+/*     font-weight: bold; */
+    padding: 12px;
+    background: rgba(226, 219, 124, 0.7);
+    color: rgb(0, 0, 0);
+    max-width: 450px;
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+
+/* Creates a small triangle extender for the tooltip */
+
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(226, 219, 124, 0.5);
+    position: absolute;
+    pointer-events: none;
+}
+
+
+/* Northward tooltips */
+
+.d3-tip.n:after {
+    content: "\25BC";
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+    text-align: center;
+}
+
+
+/* Eastward tooltips */
+
+.d3-tip.e:after {
+    content: "\25C0";
+    margin: -4px 0 0 0;
+    top: 50%;
+    left: -8px;
+}
+
+
+/* Southward tooltips */
+
+.d3-tip.s:after {
+    content: "\25B2";
+    margin: 0 0 1px 0;
+    top: -8px;
+    left: 0;
+    text-align: center;
+}
+
+
+/* Westward tooltips */
+
+.d3-tip.w:after {
+    content: "\25B6";
+    margin: -4px 0 0 -1px;
+    top: 50%;
+    left: 100%;
+}
+
+#name_word {
+    border-radius: 3px;
+    margin: 2px;
+    padding: 3px;
+    color: red;
+    background-color: rgba(120, 207, 117,0.5);
+    opacity:70;
+}* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+html {
+/*     color: #DEF; */
+    font-size: 16px;
+    font-family: "Open Sans", "Helvetica Neue", Tahoma, sans-serif;
+}
+
+body {
+    /* background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/102308/Blur-4.jpg"); */
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -webkit-background-size: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.slider-content {
+    position: absolute;
+    left: .5%;
+    right: .5%;
+    top: 1%;
+    bottom: 2%;
+    background-color: rgba(255, 255, 255, 0.4);
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    overflow: hidden;
+    /*! align-content: end; */
+}
+
+.dataTable {
+    background-color:bisque;
+    -webkit-flex: 1;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.dataTable p {
+    display: block;
+    text-align: right;
+    margin: auto 0;
+    color: rgba(255, 255, 255, 0.2);
+    font-weight: 800;
+    padding-right: 20px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    top: 0;
+    height: 100px;
+    overflow: hidden;
+    font-size: 2rem;
+}
+
+.properties {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: stretch;
+    padding: 0;
+    background-color:white;
+    -webkit-flex: 0 0 20rem;
+    flex: 0 0 30rem;
+    order: 1;
+    -moz-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    -webkit-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.properties .slider {
+    width: 3px;
+    height: 100vw;
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: col-resize;
+    -moz-transition: background-color 0.3s linear;
+    -o-transition: background-color 0.3s linear;
+    -webkit-transition: background-color 0.3s linear;
+    transition: background-color 0.3s linear;
+}
+
+.properties .slider:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.properties .size {
+    display: none;
+    text-align: center;
+    margin: auto 0;
+    color: rgba(0, 0, 0, 0.4);
+    font-weight: 800;
+    padding-right: 20px;
+    position: absolute;
+    width: 90%;
+    left: 5%;
+    right: 5%;
+    bottom: 0;
+    top: 0;
+    height: 100px;
+    overflow: hidden;
+    font-size: 3rem;
+}
+
+.ghostSlider {
+    position: absolute;
+    width: 3px;
+    height: 100vw;
+    background-color: rgba(0, 0, 0, 0.5);
+    cursor: col-resize;
+    z-index: 9999;
+}#chart {
+    cursor: grabbing;
+    /* height: 0vmax; */
+}
+
+text {
+    cursor: pointer;
+}
+
+.clm-wide1 {
+    /* height: 600px; */
+    max-width: 65%;
+    padding: 5px;
+}
+
+.red_text {
+    fill: red;
+}
+
+.black_text {
+    fill: black;
+}
+
+#text-column {
+    width: 100%;
+}
+
+#quiz_choices {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    overflow: scroll;
+}
+
+.answer {
+    display: inline-block;
+    background-color: lightblue;
+    font-size: 1.5em;
+    margin: 5px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    color: black;
+    height: auto;
+    cursor: pointer;
+}
+
+#switch-graph {
+    display: block;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}

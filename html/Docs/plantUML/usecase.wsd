@@ -1,0 +1,43 @@
+@startuml
+' ########### use cases ##########
+left to right direction
+package Graph{
+usecase "select text" as select_txt
+usecase "add child" as add_child
+usecase "select node" as select_node
+}
+package Data {
+usecase "get graph list" as list
+usecase "open graph" as open
+usecase "save current graph" as save
+}
+(Hierarchy) as (Hierarachy)
+(Stratified JSON) as (JSON) 
+(Draw Graph) as (tree_graph)
+(zoom and pane) as (zoom)
+(collapse and Expand Subtree)  as (colps_exp)
+(Create Tabular Data) as tabul_Data
+' ########### relations ##########
+:user: -- (select_node)
+user --(add_child)
+user -- (select_txt)
+user -- (list)
+user -- open
+user -- (save)
+:textograph server: -- open
+:textograph server: --save
+:textograph server: --list
+:textograph server: ..JSON :uses
+add_child .. tabul_Data
+:data_graph: <-- Graph
+:data_graph: --> Hierarachy :create from tabular data
+:data_graph: --> JSON :create from tabular data
+:data_graph: --> tabul_Data
+collapsibletree --|> d3.tree
+Hierarachy ..> :d3.tree: :data to draw
+tree_graph<-- d3.tree :from Hierarachy
+zoom <-- d3.tree
+d3.tree --> (update Graph)
+colps_exp <-- collapsibletree
+tabul_Data <..> JSON
+@enduml

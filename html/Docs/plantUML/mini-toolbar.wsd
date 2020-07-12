@@ -1,0 +1,29 @@
+@startuml
+:user selected text;
+if(recording mode) then (yes)
+    :do the action on selection;
+    :set selection to null;
+else
+endif
+:show toolbar;
+if () then (record)
+    :change\nrecording\nmode;
+    :set action func to null;
+else() then (save action\nin a function)
+    :save action\nin a function;
+endif
+if(action function is null) then (no)
+    if(selected text array is empty) then (yes)
+        if (selection null) then (no)
+            :do the action on selection;
+            :set selection to null;
+        else (yes)
+        note: selected text is removed\n on selection because of\nauto repeat functionality
+        endif
+    else (no)
+    :do the action on\nselected text array;
+    :empty the array;
+    endif
+else (yes)
+endif
+@enduml

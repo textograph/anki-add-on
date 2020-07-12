@@ -1,0 +1,32 @@
+fork does not     work also for  repeate
+
+@startuml
+
+|Dialog|
+start
+
+:show get name dialog;
+repeat 
+:get name from user;
+backward:Show Error: Name exists;
+repeat while (name not exist in database?)
+fork
+:Cancel;
+fork again
+
+|json Creation|
+if (create new is checked) then (yes)
+:dont set json.id property;
+else(no)
+:set json id property to current graph id;
+endif
+:add graph to jason obj;
+:add version to json obj;
+:add notes and user text to json;
+|Dialog|
+:send json to server;
+end fork
+
+stop
+
+@enduml
