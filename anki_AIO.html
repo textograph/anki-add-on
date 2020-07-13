@@ -24,17 +24,23 @@
                     </div>
                 </div>
                 <div class="dataTable column">
+                    <div id="sliders" class="sliders-row">
+                        <button id="switch-graph">switch</button>
+                        <input type="range" min="1" max="100" value="25" class="range-slider" id="sliderViewBox">
+                        <input type="range" min="1" max="100" value="50" class="range-slider" id="sliderRadius">
+
+                    </div>
                     <div id="chart">
                         <svg>
                             <g></g>
                         </svg>
-                        <button id="switch-graph">switch</button>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/jquery-3.5.1.min.js"></script>
     <script src="js/d3.v5.min.js"></script>
     <script src="js/d3-tip.min.js"></script>
     <script src="js/slider.js"></script>
@@ -42,8 +48,8 @@
     <script src="js/chart.js"></script>
     <script src="js/collapsible_tree.js"></script>
     <script type="text/javascript" src="js/toolbar.js"></script>
-    <script type="text/javascript" src="js/loaddata.js"></script> -->
-    <script src="compiled/script_test.js"></script>
+    <script type="text/javascript" src="js/loaddata.js"></script>
+    <!-- <script src="compiled/script_test.js"></script> -->
     <script>
     </script>
 </body>

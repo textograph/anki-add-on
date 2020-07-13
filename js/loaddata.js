@@ -60,7 +60,11 @@ json_data = {
     }]
 };
 
+pycmd = function(str) {
+
+}
 graph_data.setData(json_data);
 drawer = chart_tree;
 json = graph_data.stratify();
+show_quiz_leaves.checked = true;
 refresh_view([3, 4]);

@@ -12,284 +12,6 @@ var curr_selected_text = '';
 var auto_repeat = false
 var repeat_action = null
 arr_cummulated_text = []
-action_funcs = {
-    "child": (d) => { graph_data.addChild(d) },
-    "before": (d) => { graph_data.addUncle(d) },
-    "below": (d) => { graph_data.addSibling(d) },
-    "add-text": (d) => { arr_cummulated_text.push(d); return true; },
-    "note": (d) => {
-        const note_id = graph_data.addNote(d)
-        graph_data.changeCurrentNote(note_id)
-        return true;
-    },
-    "delete-node": () => {
-        graph_data.deleteCurrentNode()
-        refresh_view()
-    },
-    "copy-node": () => graph_data.copyCurrentNode(),
-    "paste-node": () => {
-        graph_data.pasteIntoCurrentNode();
-        refresh_view();
-    },
-    "cut-node": () => {
-        graph_data.copyCurrentNode();
-        graph_data.deleteCurrentNode();
-        refresh_view()
-    },
-    "add-note": (d) => {
-        note_id = graph_data.addNote(d)
-        graph_data.current_node.note_id = note_id
-    },
-    "edit-node": () => {
-        const node_name = prompt("enter new name for this node", graph_data.current_node.name)
-        if (node_name) {
-            graph_data.current_node.name = node_name
-            refresh_view()
-        }
-    },
-    "add-to-anki": () => {
-        frontjson = graph_data.stratify(graph_data.current_node)
-        notes = graph_data.getNotes()
-        settings = `radial_tree.zoom = ${radial_tree.zoom};
-        radial_tree.radius = 25
-        chart_tree.zoom = ${chart_tree.zoom}
-        chart_tree.radius = 10;`
-        json = {
-            "action": "addNote",
-            "version": 6,
-            "params": {
-                "note": {
-                    "deckName": "Default",
-                    "modelName": "Textograph",
-                    "fields": {
-                        "TestGraph": JSON.stringify(frontjson),
-                        "AnswerGraph": "show_quiz_leaves.checked=false;refresh_view();",
-                        "Notes": JSON.stringify(notes),
-                        "Settings": settings
-                    },
-                    "options": {
-                        "allowDuplicate": true,
-                        "duplicateScope": "deck"
-                    },
-                    "tags": [
-                        "textograph",
-                        graph_data.root_node.name,
-                        graph_data.name,
-                        graph_data.current_node.name
-                    ],
-                }
-            }
-        }
-
-        $.post({
-            url: 'http://localhost:8765',
-            data: JSON.stringify(json),
-            error: function(xhr, status, error) {
-                var err = xhr.responseText;
-                server_obj.busy = false
-                alert(err.Message);
-            },
-            success: function(data) {
-                // ********* better to write with try catch  ****
-                alert("anki note created successfully")
-            }
-        })
-    }
-}
-
-$(document).keyup(function(e) {
-    if (e.keyCode === 27) {
-        auto_repeat = false;
-        set_clss("auto-repeat", "")
-        set_clss(repeat_action, "") //turn off prev
-        repeat_action = null
-        return;
-    } else if (e.keyCode === 46) {
-        graph_data.deleteCurrentNode()
-        refresh_view()
-    }
-});
-
-function ChangeDocText() {
-    $("#text-view").html($("#text_area").htmlarea('html'));
-    var event = new Event('click');
-    document.getElementById("close-edit-dlg").dispatchEvent(event);
-}
-
-function gText(e) {
-    var selection = document.getSelection ?
-        document.getSelection().toString() :
-        document.selection.createRange().toString();
-    t = selection
-    if (selection && !show_quiz_leaves.checked) {
-        if (repeat_action) {
-            if (!action_funcs[repeat_action](t))
-                redraw_graph();
-            deselectAllTexts()
-            curr_selected_text = ""
-            t = ""
-            if (repeat_action == "child") {
-                // dont allow auto child creation, change it to add sibling instead                
-                set_clss(repeat_action, "") //turn off prev
-                repeat_action = "below"
-                set_clss(repeat_action, "green-color") //turn on current                
-            }
-        }
-        showMiniToolbar(e);
-    } else {
-        hide_minitoolbar();
-    }
-}
-
-function showMiniToolbar(e) {
-    box = document.querySelector('#mini-toolbar');
-    toolbar = $("#mini-toolbar");
-    Y = e.clientY + 10;
-    toolbar.css("top", `${Y}px`);
-    toolbar.css("display", 'flex');
-    a = toolbar.width();
-    X = e.clientX - (box.clientWidth / 2);
-    toolbar.css("left", `${X}px`);
-    regex_selected_text = new RegExp(t, 'i')
-    cur_note = graph_data.getCurrentNote();
-    // blink comment if there is indication
-    if (!cur_note || cur_note.search(regex_selected_text) < 0)
-        set_clss("note", "blink")
-    else
-        set_clss("note", "")
-
-    set_clss("auto-repeat", auto_repeat ? "blink" : "")
-}
-
-
-function set_clss(item_id, class_name) {
-    $(`#${item_id}`).attr("class", class_name)
-}
-
-function onSaveAsDialog() {
-
-}
-
-function onOpenDialog() {
-
-}
-text_view.onmouseup = gText;
-if (!document.all) document.captureEvents(Event.MOUSEUP);
-
-
-document.addEventListener("mousedown", function() {
-    console.log("click")
-})
-
-function showCanvasToolbar(node) {
-    // this function and next one are public and are called from chart and collapsible_tree objects.
-    // in the future i must create a Draw class and create tree and collapsible_tree objects from Draw class
-    // and initialize each object with a context menu function, in this way the encapsulation rule is not violated
-    e = d3.event;
-    const toolbar = $("#canvas-toolbar");
-    toolbar.css("display", 'block');
-    const Y = e.clientY - (toolbar.height() / 2);
-    const X = e.clientX - toolbar.width() - 10;
-    toolbar.css("left", `${X}px`);
-    toolbar.css("top", `${Y}px`);
-    console.log(e.clientY, e.clientX)
-}
-
-function hideCanvasToolbar(node) {
-    console.log("hiding")
-    toolbar = $("#canvas-toolbar");
-    toolbar.css("display", 'none');
-}
-
-// if toolbar buttons clicked
-$("#canvas-toolbar").on('click', 'div', function() {
-    the_id = $(this).attr("id")
-    action_funcs[the_id]()
-})
-
-$("#mini-toolbar").on('click', 'div', function() {
-    if (curr_selected_text || auto_repeat) {
-        // do action if there is a selection or we are in recording mode
-        console.log(curr_selected_text);
-        the_id = $(this).attr("id")
-        if (the_id == "auto-repeat" || the_id == repeat_action) { // code block to turn blinking on or off
-            auto_repeat = auto_repeat ? false : true;
-            set_clss("auto-repeat", auto_repeat ? "blink" : "")
-            set_clss(repeat_action, "") //turn off prev
-            repeat_action = null
-            if (!auto_repeat) hide_minitoolbar(); //we just hase been turned it off
-            return;
-        }
-        hide_minitoolbar()
-        if (arr_cummulated_text.length > 0 && the_id != "add-text") {
-            // aggregate previously selected texts if we are not in recording mode
-            arr_cummulated_text.push(curr_selected_text)
-            curr_selected_text = arr_cummulated_text.join(" ")
-            delete arr_cummulated_text;
-            arr_cummulated_text = []
-        }
-        if (curr_selected_text !== "")
-            if (!action_funcs[the_id](curr_selected_text)) {
-                redraw_graph()
-                if (the_id == "child") the_id = "below" // dont allow auto child creation; instead, change it to add sibling 
-                curr_selected_text = ""
-                    // save_to_document()
-                    // $("#save_area").text(`json_data=${json_str}; graph_data.setData(json_data);`)
-            }
-        if (auto_repeat)
-            if (repeat_action != "add-text") {
-                set_clss(repeat_action, "") //turn off prev                             
-                set_clss(the_id, "green-color") //turn on current
-                repeat_action = the_id;
-
-            }
-            // alert("You clicked on li " + $(this).text());
-    }
-
-});
-
-function hide_minitoolbar() {
-    deselectAllTexts();
-    toolbar = $("#mini-toolbar");
-    toolbar.css("display", 'none');
-}
-$("#mini-toolbar").on('mousedown', 'div', function() {
-    if (t) {
-        curr_selected_text = t;
-    }
-
-});
-
-
-$("#toolbar").on('click', 'div', function() {
-
-    // console.log($("#save_area").text())
-
-    the_id = $(this).attr("id")
-    switch (the_id) {
-        case "web":
-            drawer = radial_tree;
-            break;
-        case "tree":
-            drawer = chart_tree;
-            break;
-        default:
-            break;
-    }
-    // there should be some code to set the zoming and radius slider based on level of corresponding drawer value
-    refresh_view();
-    // alert("You clicked on li " + $("#save_area").val());
-    // var json = JSON.stringify([...graph_data.nodes.values()]);
-    // $("#save_area").text("data = " + json + ";graph_data.setData(data)")
-
-});
-
-function deselectAllTexts() {
-    try {
-        document.selection.empty();
-    } catch (error) {}
-    window.getSelection().removeAllRanges();
-}
 
 function refresh_view(exceptions) {
     redraw_graph();
@@ -300,8 +22,8 @@ function redraw_graph(draw = true) {
     // puts new data into chart and draws the chart from scratch
 
     if (graph_data.nodes.size) {
-        // viewBoxSlider.value = drawer.zoom
-        // radiusSlider.value = drawer.radius
+        viewBoxSlider.value = drawer.zoom
+        radiusSlider.value = drawer.radius
         json = graph_data.stratify();
         let data = d3.hierarchy(json);
         drawer.selected_node_id = graph_data.current_node.id
@@ -383,6 +105,17 @@ $("#switch-graph").on("click", function() {
     drawer = (drawer == radial_tree) ? chart_tree : radial_tree;
     refresh_view()
 })
+
+radiusSlider.oninput = function() {
+    drawer.radius = this.value;
+    drawer.refresh();
+}
+
+viewBoxSlider.oninput = function() {
+    drawer.changeZoom(this.value);
+    console.log(this.value);
+}
+
 
 function remove_leaves(hierarchy, exceptions = null) {
     hierarchy.descendants().forEach((d, i) => {
