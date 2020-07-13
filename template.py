@@ -44,7 +44,12 @@ def get_css() -> str:
         'slider.css',
         'style.css',
     ]
-    return concat_files(css_files, 'css')
+    css = """
+    .cloze{
+display: none;
+}
+    """
+    return css + concat_files(css_files, 'css')
 
 
 def create_frontside(fields: dict = TG_FIELDS) -> str:
