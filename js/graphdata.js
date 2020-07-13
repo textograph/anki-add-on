@@ -1,3 +1,4 @@
+
 function getNodeNote(d) {
 
     if (d != null) {
@@ -9,6 +10,7 @@ function getNodeNote(d) {
     } else
         return null
 }
+
 var graph_data = {
     nodes: new Map(),
     notes: {},

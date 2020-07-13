@@ -22,8 +22,8 @@ function redraw_graph(draw = true) {
     // puts new data into chart and draws the chart from scratch
 
     if (graph_data.nodes.size) {
-        viewBoxSlider.value = drawer.zoom
-        radiusSlider.value = drawer.radius
+        // viewBoxSlider.value = drawer.zoom
+        // radiusSlider.value = drawer.radius
         json = graph_data.stratify();
         let data = d3.hierarchy(json);
         drawer.selected_node_id = graph_data.current_node.id
