@@ -1,3 +1,16 @@
+
+function getNodeNote(d) {
+
+    if (d != null) {
+        node = d.data
+        if (node.note_id != null)
+            return graph_data.notes[node.note_id]
+        else
+            return getNodeNote(d.parent)
+    } else
+        return null
+}
+
 var graph_data = {
     nodes: new Map(),
     notes: {},
@@ -12,6 +25,7 @@ var graph_data = {
     id: null,
     url: null,
     clipboard: null,
+
     deleteCurrentNode() {
         nodes = [...this.nodes.values()]
         this.deleteNode(this.current_node, nodes)
@@ -49,13 +63,10 @@ var graph_data = {
     addChildTo(node, parent = null, data = null) {
         // adds new node to nodes repo, increases autonumber, 
         //  and makes currnt_node pointer to point to the newly created node
-        if (this.current_note == null) {
-            window.alert("no note is specified, please select some text and specify it as your current note")
-            return;
-        }
 
         if (data == null) {
             data = { note_id: this.current_note }
+            this.current_note = null
         }
         if (typeof node === "string") {
 
@@ -136,6 +147,10 @@ var graph_data = {
     },
     setNotes(notes) {
         this.notes = notes
+        max = 0
+        for (let key in this.notes)
+            if (max < +key) max = +key
+        this.note_auto_id = max + 1
     },
     stratify(parent = null, copy_id = true) {
         nodes = [...this.nodes.values()]

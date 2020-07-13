@@ -59,7 +59,13 @@ json_data = {
         "children": []
     }]
 };
+
+
+pycmd = function(str) {
+
+}
 graph_data.setData(json_data);
 drawer = chart_tree;
 json = graph_data.stratify();
-refresh_view();
+show_quiz_leaves.checked = true;
+refresh_view([3, 4]);
