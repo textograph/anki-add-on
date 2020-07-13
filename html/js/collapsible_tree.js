@@ -34,7 +34,7 @@ var chart_tree = {
         root.y0 = 0;
         root.descendants().forEach((d, i) => {
             if (!d.id) d.id = i;
-            d._children = d.children;
+            if (d.children != null) d._children = d.children;
             // if (d.depth && d.data.name.length !== 7) d.children = null;
         });
         var svg = d3.select('#chart')
@@ -204,5 +204,3 @@ var chart_tree = {
         this.selectNode(node.datum(), node.node())
     },
 }
-
-

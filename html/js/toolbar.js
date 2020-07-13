@@ -102,8 +102,12 @@ function getQuiz(exceptions = null) {
     }
 }
 $("#switch-graph").on("click", function() {
+    data = drawer.data
     drawer = (drawer == radial_tree) ? chart_tree : radial_tree;
-    refresh_view()
+    drawer.selected_node_id = graph_data.current_node.id
+    drawer.draw(data);
+    radiusSlider.value = drawer.radius
+    viewBoxSlider.value = drawer.zoom
 })
 
 radiusSlider.oninput = function() {
