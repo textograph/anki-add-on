@@ -1,10 +1,11 @@
 // this file is no longer used and implemented within python app
 exeption_nodes = [] {
-    { Settings } }
+    { Settings }
+}
 sub_answer = [] <
-    /script> {
-        { cloze::AnswerGraph } } <
-    script >
+    /script> { { cloze::AnswerGraph }
+} <
+script >
 
     sub_answer.forEach(function(element, index) {
         exeption_nodes.push(...element)
@@ -12,10 +13,12 @@ sub_answer = [] <
     });
 
 json_data = {
-    { TestGraph } };
+    { TestGraph }
+};
 graph_data.setData(json_data);
 graph_data.setNotes({
-    { Notes } });
+    { Notes }
+});
 drawer = chart_tree;
 json = graph_data.stratify();
 refresh_view(exeption_nodes);
