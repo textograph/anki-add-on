@@ -2,8 +2,8 @@ import os
 import re
 
 TG_FIELDS = {
-    'cloze': 'AnswerGraph',
     'grph': 'TestGraph',
+    'cloze': 'AnswerGraph',
     'grph_notes': 'Notes',
     'txt': 'Text',
     'stngs': 'Settings',
@@ -78,11 +78,11 @@ def common_template():
 
 def concat_files(files: list, subfolder: str = "") -> str:
     base_dir = os.path.join(os.path.dirname(__file__), 'html', subfolder)
-    css = ""
+    txt = ""
     for file_name in files:
         with open(os.path.join(base_dir, file_name), 'r') as file:
-            css += file.read()
-    return css
+            txt += file.read()
+    return txt
 #
 # a = create_backside()
 # pass
