@@ -7,6 +7,7 @@ import aqt
 from anki.consts import MODEL_CLOZE
 from aqt import gui_hooks
 
+from .template import TG_FIELDS
 from . import template
 
 '''
@@ -84,6 +85,7 @@ def my_q_show(the_card):
 
 
 def create_model():
+
     mm = aqt.mw.col.models
     m = mm.new(Textograph_MODEL_NAME)
     m["type"] = MODEL_CLOZE
@@ -101,13 +103,6 @@ def create_model():
         mm.addTemplate(m, t)
         mm.add(m)
 
-TG_FIELDS = {
-    'cloze': 'AnswerGraph',
-    'grph': 'TestGraph',
-    'grph_notes': 'Notes',
-    'txt': 'Text',
-    'stngs': 'Settings',
-}
 
 Textograph_MODEL_NAME = "Textograph 1"
 Textograph_CARD_NAME = 'Textograph Card'
