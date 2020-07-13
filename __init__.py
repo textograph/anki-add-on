@@ -6,6 +6,7 @@ APACHE 2 Licence
 import aqt
 from anki.consts import MODEL_CLOZE
 from aqt import gui_hooks
+from aqt.utils import showInfo
 
 from .template import TG_FIELDS
 from . import template
@@ -84,11 +85,10 @@ def my_q_show(the_card):
         the_card.sub_questions = []
 
 
-def create_model():
-
-    mm = aqt.mw.col.models
+def create_model(mm):
     m = mm.new(Textograph_MODEL_NAME)
     m["type"] = MODEL_CLOZE
+    m['ver'] = MODEL_VERSION
 
     if m:
         for i in TG_FIELDS:
@@ -104,11 +104,31 @@ def create_model():
         mm.add(m)
 
 
+def check_note_type():
+    mm = aqt.mw.col.models
+    m = mm.byName(Textograph_MODEL_NAME)
+    if not m:
+        create_model(mm)
+    else:
+        try:
+            if m['ver'] != MODEL_VERSION:
+                showInfo("Textograph Note Type changed to version: " + MODEL_VERSION + ", Previous version was" + m['ver'])
+                t = m['tmpls'][0]
+                m["css"] += template.get_css()
+                t["qfmt"] = template.create_frontside()
+                t["afmt"] = template.create_backside()
+                m['ver'] = MODEL_VERSION
+                mm.save()
+        except (ValueError, NameError):
+            pass
+
+
+
 Textograph_MODEL_NAME = "Textograph 1"
 Textograph_CARD_NAME = 'Textograph Card'
-
+MODEL_VERSION = "1"
 
 gui_hooks.webview_did_receive_js_message.append(correct_sub_answer)
 gui_hooks.reviewer_did_show_question.append(my_q_show)
 gui_hooks.reviewer_did_answer_card.append(create_new_cloze)
-gui_hooks.profile_did_open.append(create_model)
+gui_hooks.profile_did_open.append(check_note_type)
