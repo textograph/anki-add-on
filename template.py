@@ -49,12 +49,12 @@ def get_css() -> str:
 
 def create_frontside(fields: dict = TG_FIELDS) -> str:
     html = common_template()
-    return  html + txt_load_fields.format(isAnswer=True, **fields)
+    return  html + txt_load_fields.format(isAnswer='true', **fields)
 
 
 def create_backside(fields: dict = TG_FIELDS) -> str:
     html = common_template()
-    return  html + txt_load_fields.format(isAnswer=False, **fields)
+    return  html + txt_load_fields.format(isAnswer='false', **fields)
 
 
 def common_template():
