@@ -59,7 +59,8 @@ json_data = {
         "children": []
     }]
 };
+
 graph_data.setData(json_data);
 drawer = chart_tree;
 json = graph_data.stratify();
-refresh_view();
+refresh_view([3, 4]);

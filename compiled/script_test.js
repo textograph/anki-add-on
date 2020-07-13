@@ -1090,7 +1090,7 @@ function getQuiz(exceptions = null) {
         d3.select("#quiz_choices").remove()
     }
 }
-$("#switch-graph").on("click", function() {
+$("#reload-graph").on("click", function() {
     drawer = (drawer == radial_tree) ? chart_tree : radial_tree;
     refresh_view()
 })
@@ -1117,17 +1117,69 @@ function remove_leaves(hierarchy, exceptions = null) {
                 delete d.children
         }
     });
-}
-exeption_nodes = [] 
-{{Settings}}
-{{AnswerGraph}}
-</script>
-{{cloze::AnswerGraph}}
-<script>
-json_data = {{TestGraph}};
+}json_data = {
+    "id": 0,
+    "name": "Reactive arthritis",
+    "children": [{
+        "id": 1,
+        "name": "EPIDEMIOLOGY",
+        "children": [{
+            "id": 2,
+            "name": " rare disease",
+            "children": []
+        }, {
+            "id": 3,
+            "name": "young adults",
+            "children": []
+        }, {
+            "id": 4,
+            "name": "both men and women",
+            "children": []
+        }, {
+            "id": 5,
+            "name": "incidence",
+            "children": [{
+                "id": 6,
+                "name": "highly heterogeneous",
+                "children": []
+            }]
+        }, {
+            "id": 7,
+            "name": "enteric bacterial infections",
+            "children": [{
+                "id": 8,
+                "name": "Campylobacter",
+                "children": [{
+                    "id": 9,
+                    "name": "Salmonella",
+                    "children": []
+                }]
+            }, {
+                "id": 10,
+                "name": "Salmonella",
+                "children": []
+            }, {
+                "id": 11,
+                "name": "Shigella",
+                "children": []
+            }]
+        }, {
+            "id": 12,
+            "name": "sporadically",
+            "children": []
+        }, {
+            "id": 13,
+            "name": "outbreaks",
+            "children": []
+        }]
+    }, {
+        "id": 14,
+        "name": "causative pathogens",
+        "children": []
+    }]
+};
+
 graph_data.setData(json_data);
-graph_data.setNotes({{Notes}});
 drawer = chart_tree;
 json = graph_data.stratify();
-refresh_view(exeption_nodes);
-
+refresh_view([3, 4]);

@@ -291,9 +291,9 @@ function deselectAllTexts() {
     window.getSelection().removeAllRanges();
 }
 
-function refresh_view() {
+function refresh_view(exceptions) {
     redraw_graph();
-    getQuiz();
+    getQuiz(exceptions);
 }
 
 function redraw_graph(draw = true) {
@@ -314,7 +314,7 @@ function redraw_graph(draw = true) {
 //var output = document.getElementById("demo");
 //output.innerHTML = slider.value;
 
-function getQuiz() {
+function getQuiz(exceptions = null) {
     let active_node = graph_data.getActiveNode()
     if (show_quiz_leaves.checked) {
         if (active_node == null) {
@@ -335,7 +335,7 @@ function getQuiz() {
 
         //          when div clicked: if div data parent id matches with hierarchy id remove div and add it to hierarchy
         // delete leaves from hierarchy
-        remove_leaves(question_hierarchy);
+        remove_leaves(question_hierarchy, exceptions);
         drawer.draw(question_hierarchy);
 
         // create a pan and insert answers into it
@@ -346,6 +346,7 @@ function getQuiz() {
             .selectAll("div")
             .data(answers)
             .join("div")
+            .filter(d => !exceptions.includes(d.data.id))
             .attr("id", d => `answer_${d.data.id}`)
             .attr("class", "answer")
             .text(d => d.data.name)
@@ -361,9 +362,11 @@ function getQuiz() {
                         }
                     }
                     parent_childs.push(d)
+
                     d.parent._children = parent_childs
                     d3.select(this).node().remove()
                     drawer.refresh();
+                    pycmd("sub_answer_" + d.data.id)
                 } else {
 
                 }
@@ -381,21 +384,25 @@ $("#switch-graph").on("click", function() {
     refresh_view()
 })
 
-function remove_leaves(hierarchy) {
+function remove_leaves(hierarchy, exceptions = null) {
     hierarchy.descendants().forEach((d, i) => {
         d.id = i;
-        if (d.height == 1) {
-            // this node only have leaves so we can remove all children at once
-            delete d.children;
-            // d.children = null;
-        } else if (d.height != 0) {
+        console.log(d.data.id)
+        if (d.height != 0) {
             // just remove children that are leaves
             let new_children = new Array;
             d.children.forEach(node => {
-                if (node.height != 0)
+                if (node.height != 0 ||
+                    exceptions.includes(node.data.id)) {
                     new_children.push(node);
+                } else
+                // this is the leaf that is question and user must solve
+                    pycmd("sub_question_" + node.data.id)
             });
-            d.children = new_children;
+            if (new_children.length)
+                d.children = new_children;
+            else
+                delete d.children
         }
     });
 }
