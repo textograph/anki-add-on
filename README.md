@@ -6,7 +6,8 @@
 
 
 # Dependencies
-The code for creating graphs came from awesome [D3js](https://github.com/d3/d3) library and [radial tree](https://observablehq.com/@d3/radial-tidy-tree) and [collapsible tree](https://observablehq.com/@d3/collapsible-tree) implementations.
+* The code for creating graphs came from awesome [D3js](https://github.com/d3/d3) library and [radial tree](https://observablehq.com/@d3/radial-tidy-tree) and [collapsible tree](https://observablehq.com/@d3/collapsible-tree) implementations.
+* [Anki](https://apps.ankiweb.net/) program, a wonderfull spaced repetition based flashcard program. this add-on tested on Anki 2.1.26  on both windows and linux based systems
 
 # How to use
 1. Install this add-on from anki add-on page
