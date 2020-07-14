@@ -49,19 +49,19 @@ def create_new_cloze(reviewer, the_card, ease):
             len(the_card.sub_questions) != 0 and \
             len(the_card.sub_answers) != 0:
         cloz_fld_name = TG_FIELDS['cloze']
-        cloze_filed = the_card.note()[cloz_fld_name]
+        txt_cloze_filed = the_card.note()[cloz_fld_name]
         match_str = r"(sub_answer\[" + the_card.cloze_id + r"\]\s=\s\[(.*?))\];"
-        match = re.search(match_str, cloze_filed, re.MULTILINE | re.DOTALL)
+        match = re.search(match_str, txt_cloze_filed, re.MULTILINE | re.DOTALL)
         if match:
             cur_shown_leafs = match.group(2)
             # remove difficult leafs from current card
             repl_str = match.group(1) + ", ".join(the_card.sub_questions) + ","
-            cloze_filed = cloze_filed.replace(match.group(1), repl_str)
-            # cloze_filed = re.sub(str(match.group(1)), repl_str, cloze_filed, count=0, flags=re.MULTILINE | re.DOTALL)
+            txt_cloze_filed = txt_cloze_filed.replace(match.group(1), repl_str)
+            # txt_cloze_filed = re.sub(str(match.group(1)), repl_str, txt_cloze_filed, count=0, flags=re.MULTILINE | re.DOTALL)
 
             # add a new card for difficult leafs by adding new cloze to the note
-            array_indexes = [int(i) for i in re.findall(r"sub_answer\[(\d+)\]\s+=", cloze_filed, re.MULTILINE | re.DOTALL)]
-            cloze_indexes = [int(i) for i in re.findall(r"{{c(\d+)::.*?}}", cloze_filed, re.MULTILINE | re.DOTALL)]
+            array_indexes = [int(i) for i in re.findall(r"sub_answer\[(\d+)\]\s+=", txt_cloze_filed, re.MULTILINE | re.DOTALL)]
+            cloze_indexes = [int(i) for i in re.findall(r"{{c(\d+)::.*?}}", txt_cloze_filed, re.MULTILINE | re.DOTALL)]
             # first find last cloze and card number
             new_array_index = max(array_indexes) + 1
             new_cloze_indexes = max(cloze_indexes) + 1
@@ -71,11 +71,11 @@ def create_new_cloze(reviewer, the_card, ease):
             repl_str = repl_str.format(id=new_array_index, values=cur_shown_leafs + ", ".join(the_card.sub_answers))
             new_cloze = "\n{{{{c{id}::<script>delete sub_answer[{id}]</script>}}}}"
 
-            cloze_filed = re.sub(match_str, repl_str, cloze_filed, count=0, flags=re.MULTILINE | re.DOTALL) + \
+            txt_cloze_filed = re.sub(match_str, repl_str, txt_cloze_filed, count=0, flags=re.MULTILINE | re.DOTALL) + \
                             new_cloze.format(id=new_cloze_indexes)
-            the_card.note()[cloz_fld_name] = cloze_filed
+            the_card.note()[cloz_fld_name] = txt_cloze_filed
             the_card.note().flush()
-            # sys.stderr.write(cloze_filed)
+            # sys.stderr.write(txt_cloze_filed)
         else:
             raise Exception("somethong goes wrong")
 
