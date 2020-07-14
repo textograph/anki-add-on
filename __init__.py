@@ -10,6 +10,7 @@ from aqt.utils import showInfo
 
 from .template import TG_FIELDS
 from . import template
+import re
 
 '''
 IMPORTANT:  I wish anki does not change its aqt.mw.reviewer.card object, otherwise every thing will broke
@@ -47,8 +48,8 @@ def create_new_cloze(reviewer, the_card, ease):
     if ease != 1 and \
             len(the_card.sub_questions) != 0 and \
             len(the_card.sub_answers) != 0:
-        cloze_filed = the_card.note()['AnswerGraph']
-        import re
+        cloz_fld_name = TG_FIELDS['cloze']
+        cloze_filed = the_card.note()[cloz_fld_name]
         match_str = r"(sub_answer\[" + the_card.cloze_id + r"\]\s=\s\[(.*?))\];"
         match = re.search(match_str, cloze_filed, re.MULTILINE | re.DOTALL)
         if match:
@@ -72,7 +73,7 @@ def create_new_cloze(reviewer, the_card, ease):
 
             cloze_filed = re.sub(match_str, repl_str, cloze_filed, count=0, flags=re.MULTILINE | re.DOTALL) + \
                             new_cloze.format(id=new_cloze_indexes)
-            the_card.note()['AnswerGraph'] = cloze_filed
+            the_card.note()[cloz_fld_name] = cloze_filed
             the_card.note().flush()
             # sys.stderr.write(cloze_filed)
         else:
