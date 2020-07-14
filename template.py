@@ -88,6 +88,3 @@ def concat_files(files: list, subfolder: str = "") -> str:
         with open(os.path.join(base_dir, file_name), 'r') as file:
             txt += file.read()
     return txt
-#
-# a = create_backside()
-# pass
