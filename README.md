@@ -36,7 +36,7 @@ The code for creating graphs came from awesome [D3js](https://github.com/d3/d3) 
 1. you must report me: anki version, operating system, anki log 
 2. if web app does not work let me know all of errors logged in log in console (in firefox you can press `ctrl`+`shift`+`i` and selecting console tab
 3. internet browser and version
-# Contribusion
+# Contribution
 is welcomed
 # Licence
 Copyright Apache version 2.0
