@@ -145,7 +145,7 @@ var radial_tree = {
 
         svg.attr("viewBox", [-300, -300, 600, 600])
         'body'
-        d3.select('body').on("click", () => hideCanvasToolbar(this))
+        // d3.select('body').on("click", () => hideCanvasToolbar(this))
         the_g = g.node()
             // d3.zoomTransform(the_g, this.transform_attr)
         svg.call(d3.zoom().transform, this.transform_attr);

@@ -178,7 +178,7 @@ var chart_tree = {
             });
 
             // g.selectAll("text")
-            d3.select('body').on("click", () => hideCanvasToolbar(this))
+            // d3.select('body').on("click", () => hideCanvasToolbar(this))
 
             svg.call(d3.zoom().transform, this.transform_attr);
             g.attr("transform", this.transform_attr.toString())
