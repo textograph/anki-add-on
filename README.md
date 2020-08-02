@@ -4,6 +4,11 @@
 
 ![textograph anki](src/image.png?raw=true)
 
+# Features
+* Creates multiple cards from one graph note (new cards is created from unanswered choices)
+* Creates diagram from pdf (using Textograph)
+* Tow graph view support
+* Automatic graph simplification (removing irrelevant nodes)
 
 # Dependencies
 * The code for creating graphs came from awesome [D3js](https://github.com/d3/d3) library and [radial tree](https://observablehq.com/@d3/radial-tidy-tree) and [collapsible tree](https://observablehq.com/@d3/collapsible-tree) implementations.
