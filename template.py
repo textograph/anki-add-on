@@ -86,5 +86,5 @@ def concat_files(files: list, subfolder: str = "") -> str:
     txt = ""
     for file_name in files:
         with open(os.path.join(base_dir, file_name), 'r') as file:
-            txt += file.read()
+            txt += file.read() + "\n"
     return txt

@@ -14,7 +14,7 @@ import re
 
 Textograph_MODEL_NAME = "Textograph"
 Textograph_CARD_NAME = 'Textograph Card'
-TG_MODEL_VERSION = {'major': 1, 'minor': 1}
+TG_MODEL_VERSION = {'major': 1, 'minor': 2}
 TG_STR_VERSION = f"{TG_MODEL_VERSION['major']}.{TG_MODEL_VERSION['minor']}"
 
 '''
