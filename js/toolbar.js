@@ -85,6 +85,15 @@ function getQuiz(exceptions = null) {
                     }
                     parent_childs.push(d)
 
+                    function unmark_parent(node) {
+                        node.parent.questions -= 1
+                        if (node.parent.questions == 0)
+                            unmark_parent(d.parent)
+                    }
+
+                    if (d.parent.questions)
+                        unmark_parent(d)
+
                     d.parent._children = parent_childs
                     d3.select(this).node().remove()
                     drawer.refresh();
@@ -101,10 +110,51 @@ function getQuiz(exceptions = null) {
         d3.select("#quiz_choices").remove()
     }
 }
+
+
 $("#switch-graph").on("click", function() {
+    data = drawer.data
     drawer = (drawer == radial_tree) ? chart_tree : radial_tree;
-    refresh_view()
+    $("#expand-graph").toggle()
+    $("#collpase-graph").toggle()
+    drawer.selected_node_id = graph_data.current_node.id
+    drawer.draw(data);
+    radiusSlider.value = drawer.radius
+    viewBoxSlider.value = drawer.zoom
 })
+
+
+$("#simple-graph").on("click", function() {
+    remove_leaves(chart_tree.data, d => d.questions ? true : false, false)
+    drawer.refresh();
+})
+
+
+$("#expand-graph").on("click", function() {
+    function unhide_children(parent) {
+        parent.descendants().forEach((d, i) => {
+            if (d._children) {
+                d.children = d._children;
+                d.children.forEach((node) => {
+                    unhide_children(node)
+                });
+            }
+        });
+    }
+    unhide_children(chart_tree.data)
+    drawer.refresh();
+})
+
+
+
+$("#collapse-graph").on("click", function() {
+
+    chart_tree.data.descendants().forEach((d, i) => {
+        if (d.depth) d.children = null;
+    });
+    drawer.refresh();
+})
+
 
 radiusSlider.oninput = function() {
     drawer.radius = this.value;
@@ -113,29 +163,53 @@ radiusSlider.oninput = function() {
 
 viewBoxSlider.oninput = function() {
     drawer.changeZoom(this.value);
-    console.log(this.value);
 }
 
 
-function remove_leaves(hierarchy, exceptions = null) {
+function remove_leaves(hierarchy, exceptions = null, markParent = true) {
+    function isException(node) {
+        if (exceptions)
+            if (typeof(exceptions) == "object")
+                return node.height != 0 || exceptions.includes(node.data.id)
+            else {
+                if (typeof(exceptions) == "function")
+                    return exceptions(node)
+            }
+        return node.height != 0
+    }
     hierarchy.descendants().forEach((d, i) => {
         d.id = i;
-        console.log(d.data.id)
-        if (d.height != 0) {
+        if (d.height != 0 && d.children) {
             // just remove children that are leaves
             let new_children = new Array;
             d.children.forEach(node => {
-                if (node.height != 0 ||
-                    exceptions.includes(node.data.id)) {
+                if (isException(node)) {
                     new_children.push(node);
-                } else
-                // this is the leaf that is question and user must solve
+                } else {
+                    // this is the leaf that is question and user must solve
                     pycmd("sub_question_" + node.data.id)
+
+                    function mark_parent(parent) {
+                        if (parent) {
+                            if (parent.questions == null) {
+                                parent.questions = 1
+                                mark_parent(parent.parent)
+                            } else
+                                parent.questions += 1
+                        }
+                    }
+                    if (markParent)
+                        mark_parent(d)
+
+                }
             });
-            if (new_children.length)
+            if (new_children.length) {
                 d.children = new_children;
-            else
-                delete d.children
+                d._children = new_children;
+            } else {
+                delete d.children;
+                delete d._children;
+            }
         }
     });
 }
