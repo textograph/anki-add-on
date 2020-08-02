@@ -1,71 +1,10 @@
-json_data = {
-    "id": 0,
-    "name": "Reactive arthritis",
-    "children": [{
-        "id": 1,
-        "name": "EPIDEMIOLOGY",
-        "children": [{
-            "id": 2,
-            "name": " rare disease",
-            "children": []
-        }, {
-            "id": 3,
-            "name": "young adults",
-            "children": []
-        }, {
-            "id": 4,
-            "name": "both men and women",
-            "children": []
-        }, {
-            "id": 5,
-            "name": "incidence",
-            "children": [{
-                "id": 6,
-                "name": "highly heterogeneous",
-                "children": []
-            }]
-        }, {
-            "id": 7,
-            "name": "enteric bacterial infections",
-            "children": [{
-                "id": 8,
-                "name": "Campylobacter",
-                "children": [{
-                    "id": 9,
-                    "name": "Salmonella",
-                    "children": []
-                }]
-            }, {
-                "id": 10,
-                "name": "Salmonella",
-                "children": []
-            }, {
-                "id": 11,
-                "name": "Shigella",
-                "children": []
-            }]
-        }, {
-            "id": 12,
-            "name": "sporadically",
-            "children": []
-        }, {
-            "id": 13,
-            "name": "outbreaks",
-            "children": []
-        }]
-    }, {
-        "id": 14,
-        "name": "causative pathogens",
-        "children": []
-    }]
-};
+json_data = { "name": "Tumor Necrosis Factor α Inhibitors", "note_id": null, "children": [{ "name": "Adalimumab", "note_id": null, "children": [{ "name": "Humanized monoclonal antibody", "note_id": null, "children": [], "id": 231 }, { "name": "IBD", "note_id": null, "children": [], "id": 239 }, { "name": "twice weekly", "note_id": null, "children": [], "id": 246 }], "id": 230 }, { "name": "Etanercept", "note_id": null, "children": [{ "name": "Humanized monoclonal antibody", "note_id": null, "children": [], "id": 242 }, { "name": "weekly", "note_id": null, "children": [], "id": 244 }], "id": 232 }, { "name": "Certolizumab pegol", "note_id": null, "children": [{ "name": "attached to polyethylene glycol strands", "note_id": null, "children": [], "id": 234 }], "id": 233 }, { "name": "Golimumab", "note_id": null, "children": [{ "name": "Humanized monoclonal antibody", "note_id": null, "children": [], "id": 241 }, { "name": "monthly", "note_id": null, "children": [], "id": 243 }], "id": 235 }, { "name": "Infliximab", "note_id": null, "children": [{ "name": "Chimeric (mouse-human) monoclonal antibody", "note_id": null, "children": [], "id": 237 }, { "name": "IBD", "note_id": null, "children": [], "id": 238 }], "id": 236 }, { "name": "RA; psoriatic arthritis; ankylosing spondylitis", "note_id": null, "children": [], "id": 240 }, { "name": "risk", "note_id": null, "children": [{ "name": "exacerbate heart failure", "note_id": null, "children": [], "id": 248 }, { "name": "provoke a demyelinating condition", "note_id": null, "children": [], "id": 249 }], "id": 247 }, { "name": "Over time lose efficacy", "note_id": null, "children": [], "id": 250 }], "id": 229 };
+
+pycmd = function(str) {}
 
 
-pycmd = function(str) {
-
-}
 graph_data.setData(json_data);
 drawer = chart_tree;
 json = graph_data.stratify();
 show_quiz_leaves.checked = true;
-refresh_view([3, 4]);
+refresh_view([237, 246, 231, 239, 238, 243, 248, 234, 244, 241, 242, 249, 250, ]);
