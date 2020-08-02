@@ -187,7 +187,6 @@ function remove_leaves(hierarchy, exceptions = null, markParent = true) {
                     new_children.push(node);
                 } else {
                     // this is the leaf that is question and user must solve
-                    pycmd("sub_question_" + node.data.id)
 
                     function mark_parent(parent) {
                         if (parent) {
@@ -198,8 +197,10 @@ function remove_leaves(hierarchy, exceptions = null, markParent = true) {
                                 parent.questions += 1
                         }
                     }
-                    if (markParent)
+                    if (markParent) {
+                        pycmd("sub_question_" + node.data.id)
                         mark_parent(d)
+                    }
 
                 }
             });
