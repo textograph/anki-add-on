@@ -86,9 +86,11 @@ function getQuiz(exceptions = null) {
                     parent_childs.push(d)
 
                     function unmark_parent(node) {
-                        node.parent.questions -= 1
-                        if (node.parent.questions == 0)
-                            unmark_parent(d.parent)
+                        if (node.parent) {
+                            node.parent.questions -= 1
+                            if (node.parent.questions == 0)
+                                unmark_parent(d.parent)
+                        }
                     }
 
                     if (d.parent.questions)
