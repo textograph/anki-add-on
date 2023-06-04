@@ -21,7 +21,20 @@ txt_load_fields ="""
     {{{{{stngs}}}}}
     sub_answer = []
 </script>
+
+<data id="mycode" style="display:none;">
 {{{{cloze::{cloze}}}}}
+
+</data>
+
+<script>
+var code = document.getElementById("mycode").innerText;
+code=code.replace('[...]', '')
+eval(code);
+//pycmd("show_js_info_"+code)
+</script>
+
+
 <script>
 sub_answer.forEach(function(element, index) {{
     exeption_nodes.push(...element)

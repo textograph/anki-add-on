@@ -14,7 +14,7 @@ import re
 
 Textograph_MODEL_NAME = "Textograph"
 Textograph_CARD_NAME = 'Textograph Card'
-TG_MODEL_VERSION = {'major': 1, 'minor': 2}
+TG_MODEL_VERSION = {'major': 2, 'minor': 0}
 TG_STR_VERSION = f"{TG_MODEL_VERSION['major']}.{TG_MODEL_VERSION['minor']}"
 
 '''
@@ -31,7 +31,10 @@ def js_msg(handled, msg, context):
         # not reviewer, pass on message
         return handled
     the_card = aqt.mw.reviewer.card
-    if msg.startswith('sub_answer_'):
+    if msg.startswith('show_js_info_'):
+        cloze_id = msg.replace('show_js_info_', '')
+        #showInfo(cloze_id)
+    elif msg.startswith('sub_answer_'):
         leaf_id = msg.replace('sub_answer_', '')
         the_card.sub_answers.append(leaf_id)
         try:
@@ -39,22 +42,24 @@ def js_msg(handled, msg, context):
         except (ValueError, AttributeError):
             pass
 
-        # showInfo("a" + ",".join(the_card.sub_answers))
+        #showInfo("ar" + ",".join(the_card.sub_answers))
         return True, None
     elif msg.startswith('sub_question_'):
         leaf_id = msg.replace('sub_question_', '')
         the_card.sub_questions.append(leaf_id)
-        # showInfo("q" + ",".join(the_card.sub_questions))
+        #showInfo("q" + ",".join(the_card.sub_questions))
         return True, None
     elif msg.startswith('save_cloze_id_'):
         cloze_id = msg.replace('save_cloze_id_', '')
         the_card.cloze_id = cloze_id
-        # showInfo(cloze_id)
+        #showInfo(cloze_id)
+
     return handled
 
 
 def create_new_cloze(reviewer, the_card, ease):
-
+    #showInfo("q" + ",".join(the_card.sub_questions))
+    #showInfo("ease:" + str(ease))
     if ease != 1 and \
             len(the_card.sub_questions) != 0 and \
             len(the_card.sub_answers) != 0:
@@ -83,10 +88,12 @@ def create_new_cloze(reviewer, the_card, ease):
             sub_cloze = match.group(1)
         else:
             sub_cloze = "sub_answer[1] = ["
-            txt_cloze_field = f"""<script id="main">
+            txt_cloze_field = f"""
+            //start of js code
             {sub_cloze}];
-            </script>
-            {{{{c1::<script>delete sub_answer[1]</script>}}}}"""
+            //end of js code            
+            {{{{c1::delete sub_answer[1]}}}}            
+            """
 
         # remove difficult leafs from current card
         # sub_question is a temp card_obj property that introduced by me for saving interactions
@@ -98,10 +105,10 @@ def create_new_cloze(reviewer, the_card, ease):
         txt_cloze_field = txt_cloze_field.replace(sub_cloze, repl_str)
 
         # add new card
-        match_str = r"<script id=\"main\">(.*?)<\/script>"
-        repl_str = r'<script id="main">\1sub_answer[{id}] = [{values},];\n</script>'
+        match_str = r"//start of js code(.*?)//end of js code"
+        repl_str = r'//start of js code\1sub_answer[{id}] = [{values},];\n//end of js code'
         repl_str = repl_str.format(id=arr_index, values=cur_shown_leafs + ", ".join(the_card.sub_answers))
-        new_cloze = "\n{{{{c{id}::<script>delete sub_answer[{id}]</script>}}}}"
+        new_cloze = "\n{{{{c{id}::delete sub_answer[{id}]}}}}"
         txt_cloze_field = "{0}{1}".format(re.sub(match_str, repl_str, txt_cloze_field,
                                                  count=0, flags=re.MULTILINE | re.DOTALL),
                                           new_cloze.format(id=clz_index))
