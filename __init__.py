@@ -154,9 +154,8 @@ def create_model(mm, name: str = Textograph_MODEL_NAME, ver: str = TG_STR_VERSIO
         t["afmt"] = template.create_backside()
 
         mm.addTemplate(m, t)
-        mid = mm.add(m).id
         mm.save(m, updateReqs=False)
-        return mid
+        return m['id']
 
 
 def check_note_type():
@@ -171,51 +170,50 @@ def check_note_type():
         model_CreateOrRename(mm, model_versioned_name)
         check_note_type()
     else:
-        try:
-            v_major, v_minor = m['ver'].split(".")
-            ver_dif = int(TG_MODEL_VERSION['major']) - int(v_major)
-            if ver_dif == 0:
-                # there is no change in the note templates
-                # so it is not necessary to recompile the note templates
-                if int(v_minor) < int(TG_MODEL_VERSION['minor']):
-                    # update current model
-                    t = m['tmpls'][0]
-                    m["css"] += template.get_css()
-                    t["qfmt"] = template.create_frontside()
-                    t["afmt"] = template.create_backside()
-                    m['ver'] = TG_STR_VERSION
-                    mm.save()
+        v_major, v_minor = m['ver'].split(".")
+        ver_dif = int(TG_MODEL_VERSION['major']) - int(v_major)
+        if ver_dif == 0:
+            # there is no change in the note templates
+            # so it is not necessary to recompile the note templates
+            if int(v_minor) < int(TG_MODEL_VERSION['minor']):
+                # update current model
+                t = m['tmpls'][0]
+                m["css"] += template.get_css()
+                t["qfmt"] = template.create_frontside()
+                t["afmt"] = template.create_backside()
+                m['ver'] = TG_STR_VERSION
+                mm.save()
+        else:
+            # if there is too old models present, so update models
+            if int(v_major) < 2:
+                update_old_notes = askUser("there is old textograph notes in this collection "
+                                           "that is not compatible with"
+                                           " newer anki version, do you want to convert them"
+                                           " into new textograph model versions, though updating is safe, "
+                                           "you must update older textograph add-ons if you have multiple "
+                                           "anki instances in multiple platforms", title="update Textograph old notes?")
+                if update_old_notes:
+                    update_note_models(mm, f"updated from {Textograph_MODEL_NAME} v{v_major}")
+            # if there is another model with different versions
+            # or if user does not want to update models then
+            # swap model names in this way:
+            # Textograph --> Textograph v1, Textograph v2 ---> Textograph
+            m['name'] = f"{Textograph_MODEL_NAME} v{v_major}"
+            mm.save(m, updateReqs=False)
+            model_CreateOrRename(mm, model_versioned_name)
+            check_note_type()  # call again to check for minor version compatibility or other problems
+            if ver_dif > 0:
+                showInfo(f"Textograph Note Type changed to version: {TG_STR_VERSION}"
+                         f", Previous version was {m['ver']}")
             else:
-                # if there is too old models present, so update models
-                if int(v_major) < 2:
-                    update_old_notes = askUser("there is old textograph notes in this collection "
-                                               "that is not compatible with"
-                                               " newer anki version, do you want to convert them"
-                                               " into new textograph model versions, though updating is safe, "
-                                               "you must update older textograph add-ons if you have multiple "
-                                               "anki instances in multiple platforms", title="update Textograph old notes?")
-                    if update_old_notes:
-                        update_note_models(mm, f"updated from {Textograph_MODEL_NAME} v{v_major}")
-                # if there is another model with different versions
-                # or if user does not want to update models then
-                # swap model names in this way:
-                # Textograph --> Textograph v1, Textograph v2 ---> Textograph
-                m['name'] = f"{Textograph_MODEL_NAME} v{v_major}"
-                mm.save(m, updateReqs=False)
-                model_CreateOrRename(mm, model_versioned_name)
-                check_note_type()  # call again to check for minor version compatibility or other problems
-                if ver_dif > 0:
-                    showInfo(f"Textograph Note Type changed to version: {TG_STR_VERSION}"
-                             f", Previous version was {m['ver']}")
-                else:
-                    showCritical("Current Textograph model works with new Textograph Add-on version. "
-                                 "So Please! update your addon, You can continue to review them but creating new cards "
-                                 "from them is not possible. Although you can create new notes ant it works "
-                                 "fine with them.")
+                showCritical("Current Textograph model works with new Textograph Add-on version. "
+                             "So Please! update your addon, You can continue to review them but creating new cards "
+                             "from them is not possible. Although you can create new notes ant it works "
+                             "fine with them.")
 
-        except (ValueError, NameError, KeyError):
-            showCritical("there was an error when updating note type. renaming these note types may solve the problem:"
-                         f"{Textograph_MODEL_NAME} or {model_versioned_name} ")
+#        except (ValueError, NameError, KeyError):
+#            showCritical("there was an error when updating note type. renaming these note types may solve the problem:"
+#                         f"{Textograph_MODEL_NAME} or {model_versioned_name} ")
 
 
 def update_note_models(mm, new_model_name):
@@ -228,7 +226,7 @@ def update_note_models(mm, new_model_name):
         note["AnswerGraph"] = re.sub(regex, "", note["AnswerGraph"], 0, re.MULTILINE)
         note.mid = new_model_id
         #showInfo(note["AnswerGraph"])
-        col.update_note(note)
+        note.flush()
 
 
 def model_CreateOrRename(mm, model_name):
