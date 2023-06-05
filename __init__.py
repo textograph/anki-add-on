@@ -6,7 +6,7 @@ APACHE 2 Licence
 import aqt
 from anki.consts import MODEL_CLOZE
 from aqt import gui_hooks
-from aqt.utils import showInfo, showCritical
+from aqt.utils import showInfo, askUser, showCritical
 
 from .template import TG_FIELDS
 from . import template
@@ -15,6 +15,8 @@ import re
 Textograph_MODEL_NAME = "Textograph"
 Textograph_CARD_NAME = 'Textograph Card'
 TG_MODEL_VERSION = {'major': 2, 'minor': 0}
+# major model ver change means there is change in templates
+# minor model ver change means there is change in model's fields but not in model's templates
 TG_STR_VERSION = f"{TG_MODEL_VERSION['major']}.{TG_MODEL_VERSION['minor']}"
 
 '''
@@ -26,14 +28,13 @@ IMPORTANT:  I wish anki does not change its aqt.mw.reviewer.card object, otherwi
 
 
 def js_msg(handled, msg, context):
-
     if not isinstance(context, aqt.reviewer.Reviewer):
         # not reviewer, pass on message
         return handled
     the_card = aqt.mw.reviewer.card
     if msg.startswith('show_js_info_'):
         cloze_id = msg.replace('show_js_info_', '')
-        #showInfo(cloze_id)
+        # showInfo(cloze_id)
     elif msg.startswith('sub_answer_'):
         leaf_id = msg.replace('sub_answer_', '')
         the_card.sub_answers.append(leaf_id)
@@ -42,24 +43,24 @@ def js_msg(handled, msg, context):
         except (ValueError, AttributeError):
             pass
 
-        #showInfo("ar" + ",".join(the_card.sub_answers))
+        # showInfo("ar" + ",".join(the_card.sub_answers))
         return True, None
     elif msg.startswith('sub_question_'):
         leaf_id = msg.replace('sub_question_', '')
         the_card.sub_questions.append(leaf_id)
-        #showInfo("q" + ",".join(the_card.sub_questions))
+        # showInfo("q" + ",".join(the_card.sub_questions))
         return True, None
     elif msg.startswith('save_cloze_id_'):
         cloze_id = msg.replace('save_cloze_id_', '')
         the_card.cloze_id = cloze_id
-        #showInfo(cloze_id)
+        # showInfo(cloze_id)
 
     return handled
 
 
 def create_new_cloze(reviewer, the_card, ease):
-    #showInfo("q" + ",".join(the_card.sub_questions))
-    #showInfo("ease:" + str(ease))
+    # showInfo("q" + ",".join(the_card.sub_questions))
+    # showInfo("ease:" + str(ease))
     if ease != 1 and \
             len(the_card.sub_questions) != 0 and \
             len(the_card.sub_answers) != 0:
@@ -137,10 +138,10 @@ def my_q_show(the_card):
         the_card.sub_questions = []
 
 
-def create_model(mm):
-    m = mm.new(Textograph_MODEL_NAME)
+def create_model(mm, name: str = Textograph_MODEL_NAME, ver: str = TG_STR_VERSION) -> int:
+    m = mm.new(name)
     m["type"] = MODEL_CLOZE
-    m['ver'] = TG_STR_VERSION
+    m['ver'] = ver
 
     if m:
         for i in TG_FIELDS:
@@ -153,7 +154,9 @@ def create_model(mm):
         t["afmt"] = template.create_backside()
 
         mm.addTemplate(m, t)
-        mm.add(m)
+        mid = mm.add(m).id
+        mm.save(m, updateReqs=False)
+        return mid
 
 
 def check_note_type():
@@ -161,6 +164,10 @@ def check_note_type():
     m = mm.byName(Textograph_MODEL_NAME)
     model_versioned_name = f"{Textograph_MODEL_NAME} v{TG_MODEL_VERSION['major']}"
     if not m:
+        # change versioned name to non-versioned name
+        # if there is a versioned name thet resembles current add-ons' model exist
+        # or create new one if does not exist:
+        # Textograph v2 ---> Textograph
         model_CreateOrRename(mm, model_versioned_name)
         check_note_type()
     else:
@@ -168,6 +175,8 @@ def check_note_type():
             v_major, v_minor = m['ver'].split(".")
             ver_dif = int(TG_MODEL_VERSION['major']) - int(v_major)
             if ver_dif == 0:
+                # there is no change in the note templates
+                # so it is not necessary to recompile the note templates
                 if int(v_minor) < int(TG_MODEL_VERSION['minor']):
                     # update current model
                     t = m['tmpls'][0]
@@ -177,13 +186,24 @@ def check_note_type():
                     m['ver'] = TG_STR_VERSION
                     mm.save()
             else:
-                # if there is another model with same version?
+                # if there is too old models present, so update models
+                if int(v_major) < 2:
+                    update_old_notes = askUser("there is old textograph notes in this collection "
+                                               "that is not compatible with"
+                                               " newer anki version, do you want to convert them"
+                                               " into new textograph model versions, though updating is safe, "
+                                               "you must update older textograph add-ons if you have multiple "
+                                               "anki instances in multiple platforms", title="update Textograph old notes?")
+                    if update_old_notes:
+                        update_note_models(mm, f"updated from {Textograph_MODEL_NAME} v{v_major}")
+                # if there is another model with different versions
+                # or if user does not want to update models then
                 # swap model names in this way:
                 # Textograph --> Textograph v1, Textograph v2 ---> Textograph
                 m['name'] = f"{Textograph_MODEL_NAME} v{v_major}"
                 mm.save(m, updateReqs=False)
                 model_CreateOrRename(mm, model_versioned_name)
-                check_note_type()   # call again to check for minor version compatibility or other problems
+                check_note_type()  # call again to check for minor version compatibility or other problems
                 if ver_dif > 0:
                     showInfo(f"Textograph Note Type changed to version: {TG_STR_VERSION}"
                              f", Previous version was {m['ver']}")
@@ -198,7 +218,23 @@ def check_note_type():
                          f"{Textograph_MODEL_NAME} or {model_versioned_name} ")
 
 
+def update_note_models(mm, new_model_name):
+    col = mm.col
+    new_model_id = create_model(mm, name=new_model_name)
+    for nid in col.findNotes("note:Textograph"):
+        note = col.getNote(nid)
+        #showInfo(mm.get(new_model_id)['name'])
+        regex = r"</?script.*?>"
+        note["AnswerGraph"] = re.sub(regex, "", note["AnswerGraph"], 0, re.MULTILINE)
+        note.mid = new_model_id
+        #showInfo(note["AnswerGraph"])
+        col.update_note(note)
+
+
 def model_CreateOrRename(mm, model_name):
+    # search for model by versioned name
+    # if versioned name exist change its name to Textograph
+    # if versioned name does not exist, so create new Textograph model
     m = mm.byName(model_name)
     if m:
         # just change model names
