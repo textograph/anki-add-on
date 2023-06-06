@@ -168,7 +168,6 @@ def check_note_type():
         # or create new one if does not exist:
         # Textograph v2 ---> Textograph
         model_CreateOrRename(mm, model_versioned_name)
-        check_note_type()
     else:
         v_major, v_minor = m['ver'].split(".")
         ver_dif = int(TG_MODEL_VERSION['major']) - int(v_major)
