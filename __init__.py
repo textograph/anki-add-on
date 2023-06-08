@@ -154,20 +154,46 @@ def create_model(mm, name: str = Textograph_MODEL_NAME, ver: str = TG_STR_VERSIO
         t["afmt"] = template.create_backside()
 
         mm.addTemplate(m, t)
-        mm.save(m, updateReqs=False)
+        mm.add(m)
         return m['id']
 
+
+def model_CreateOrRename():
+    # search for model by versioned name
+    # if versioned name exist change its name to Textograph
+    # if versioned name does not exist, so create new Textograph model
+    model_versioned_name = f"{Textograph_MODEL_NAME} v{TG_MODEL_VERSION['major']}"
+    mm = aqt.mw.col.models
+    m = mm.byName(model_versioned_name)
+    if m:
+        # just change model names
+        m['name'] = Textograph_MODEL_NAME
+        mm.save(m, updateReqs=False)
+    else:
+        # update model
+        create_model(mm)
+
+def update_note_models(mm, new_model_name):
+    col = mm.col
+    new_model_id = create_model(mm, name=new_model_name)
+    for nid in col.findNotes("note:Textograph"):
+        note = col.getNote(nid)
+        #showInfo(mm.get(new_model_id)['name'])
+        regex = r"</?script.*?>"
+        note["AnswerGraph"] = re.sub(regex, "", note["AnswerGraph"], 0, re.MULTILINE)
+        note.mid = new_model_id
+        #showInfo(note["AnswerGraph"])
+        note.flush()
 
 def check_note_type():
     mm = aqt.mw.col.models
     m = mm.byName(Textograph_MODEL_NAME)
-    model_versioned_name = f"{Textograph_MODEL_NAME} v{TG_MODEL_VERSION['major']}"
     if not m:
         # change versioned name to non-versioned name
         # if there is a versioned name thet resembles current add-ons' model exist
         # or create new one if does not exist:
         # Textograph v2 ---> Textograph
-        model_CreateOrRename(mm, model_versioned_name)
+        model_CreateOrRename()
     else:
         v_major, v_minor = m['ver'].split(".")
         ver_dif = int(TG_MODEL_VERSION['major']) - int(v_major)
@@ -199,7 +225,7 @@ def check_note_type():
             # Textograph --> Textograph v1, Textograph v2 ---> Textograph
             m['name'] = f"{Textograph_MODEL_NAME} v{v_major}"
             mm.save(m, updateReqs=False)
-            model_CreateOrRename(mm, model_versioned_name)
+            model_CreateOrRename()
             check_note_type()  # call again to check for minor version compatibility or other problems
             if ver_dif > 0:
                 showInfo(f"Textograph Note Type changed to version: {TG_STR_VERSION}"
@@ -215,31 +241,7 @@ def check_note_type():
 #                         f"{Textograph_MODEL_NAME} or {model_versioned_name} ")
 
 
-def update_note_models(mm, new_model_name):
-    col = mm.col
-    new_model_id = create_model(mm, name=new_model_name)
-    for nid in col.findNotes("note:Textograph"):
-        note = col.getNote(nid)
-        #showInfo(mm.get(new_model_id)['name'])
-        regex = r"</?script.*?>"
-        note["AnswerGraph"] = re.sub(regex, "", note["AnswerGraph"], 0, re.MULTILINE)
-        note.mid = new_model_id
-        #showInfo(note["AnswerGraph"])
-        note.flush()
 
-
-def model_CreateOrRename(mm, model_name):
-    # search for model by versioned name
-    # if versioned name exist change its name to Textograph
-    # if versioned name does not exist, so create new Textograph model
-    m = mm.byName(model_name)
-    if m:
-        # just change model names
-        m['name'] = Textograph_MODEL_NAME
-        mm.save(m, updateReqs=False)
-    else:
-        # update model
-        create_model(mm)
 
 
 gui_hooks.webview_did_receive_js_message.append(js_msg)
